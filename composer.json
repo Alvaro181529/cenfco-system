@@ -1,0 +1,8 @@
+{
+    "require": {
+        "altorouter/altorouter": "^2.0",
+        "aura/auth": "^4.0",
+        "tecnickcom/tcpdf": "^6.8",
+        "box/spout": "^3.3"
+    }
+}
