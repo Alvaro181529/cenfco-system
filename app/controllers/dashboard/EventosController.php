@@ -24,14 +24,13 @@ class EventosController
         $titulo = isset($_GET['titulo']) ? $_GET['titulo'] : null;
         $descripcion = isset($_GET['descripcion']) ? $_GET['descripcion'] : null;
         $categoria = isset($_GET['categoria']) ? $_GET['categoria'] : null;
+        $pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+        $resultadosPorPagina = isset($_GET['resultadosPorPagina']) ? (int)$_GET['resultadosPorPagina'] : 10;
+
         $docentesModel = new DocentesModel();
         $eventosModel = new EventosModel();
         $docentes = $docentesModel->obtenerDocentes();
-        if (empty($titulo) && empty($descripcion && empty($categoria))) {
-            $eventos = $eventosModel->obtenerEventos();
-            return  require __DIR__ . '/../../views/dashboard/eventos.php';
-        }
-        $eventos = $eventosModel->buscarEventos($titulo, $descripcion, $categoria);
+        $eventos = $eventosModel->obtenerEventos($titulo, $descripcion, $categoria, $pagina, $resultadosPorPagina);
         return  require __DIR__ . '/../../views/dashboard/eventos.php';
     }
 

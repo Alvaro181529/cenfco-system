@@ -182,19 +182,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `password`, `correo`, `role`, `created_at`) VALUES
-(6, 'alvaroq', '$2y$10$9nDgSreT22pOdNz1dWxpoeGCsVLijjEkTml/GFZHxxEL1HswJCL4O', 'alva1@gmail.com', 'user', '2025-03-05 22:01:43'),
-(7, 'alvaro1', '$2y$10$sfiH.pu2Q009n82CFlADuO25isfLqBU8qej4fU02NN1thosbvyfEO', 'alvaq1@gmail.com', 'user', '2025-03-05 22:14:56'),
-(8, 'juan', '$2y$10$KT3Fg1YOCOUBbmxysjBHE.cLS.C2qxYpqk5lIZemoD15Bd1ytTJLm', 'juan@gmail.com', 'user', '2025-03-05 22:20:50'),
-(9, 'Alvaro Medrnao', '$2y$10$QlyO6FvgJe2thp1SI1F/xeksH285Y1VBEuX5i725wQR.VQEaIjdVy', 'aljak@123.com', 'user', '2025-03-07 01:18:38'),
-(10, 'unico', '$2y$10$gQS/qm5ZX2SeKqQoCDXbB.uKTNG.WrhqxbjtyB0wFhH/q9saerf0W', 'unico@gmai.com', 'user', '2025-03-07 01:28:32'),
-(12, 'asdf', '$2y$10$seuu2I/w73TjWVmmJ/PauOWOWZd6XiVAiHPoE5rvfdTnsSmHaYnrC', 'asdf@gmail.com', 'user', '2025-03-07 01:37:36'),
-(14, 'un', '$2y$10$rfuKF5kSGfu57pWOfyteYO0grOHENVJI/YCcL/10zLo.0qVXADc4.', 'un@gmail.com', 'user', '2025-03-07 01:50:38'),
-(15, 'Adminsitrador', '$2y$12$CD0QKfgr5fTzMqUlkNtP/O9tzTbFRJXD8uGwudNxUeVDdULIc4QMO', 'administrador@gmail.com', 'Administrador', '2025-03-08 01:12:59'),
-(25, 'Administrador', '$2y$12$BfsaRB8pnTJetOpZTHZzROkY5VMHY5r5WePCJMQgU0hBpqUnV4ywC', 'admin@gmail.com', 'Administrador', '2025-03-10 22:45:33'),
-(26, 'Ventas', '1234Qwer', 'ventas@gmail.com', 'Vendedor', '2025-03-26 12:31:15'),
-(27, 'ventas@gmail.com', '1234qwer', 'ventas1@gmail.com', 'Vendedor', '2025-03-26 12:32:58'),
-(28, 'vendedor', '$2y$12$hkCkA7aUL4B5O4jrrk5aie0rqeEK4942XvWBsdmqiwFENw856c.86', 'venta@gmail.com', 'Vendedor', '2025-03-26 12:33:52'),
-(29, 'vendedor', '$2y$12$DVZsSA.2CLMXMN0THRC/..YgCoaKQtZvvu/EnppTJEUcBIx7j23b6', 'vendedor@gmail.com', 'Vendedor', '2025-03-26 12:41:03');
+(1, 'Adminsitrador', '$2y$12$CD0QKfgr5fTzMqUlkNtP/O9tzTbFRJXD8uGwudNxUeVDdULIc4QMO', 'administrador@gmail.com', 'Administrador', '2025-03-08 01:12:59'),
+(, 'vendedor', '$2y$12$DVZsSA.2CLMXMN0THRC/..YgCoaKQtZvvu/EnppTJEUcBIx7j23b6', 'vendedor@gmail.com', 'Vendedor', '2025-03-26 12:41:03');
 
 -- --------------------------------------------------------
 

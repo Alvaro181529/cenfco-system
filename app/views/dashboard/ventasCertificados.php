@@ -1,8 +1,9 @@
 <?php require 'template/head.php' ?>
 <?php require 'template/navbar.php' ?>
 
-<main id="main" class="container">
+<main id="main" class="container" data-aos="fade-up">
     <h1><?php echo $total['0']['totalPrecio'] ?></h1>
+    <button id="ventaCertificado">Reporte</button>
     <div class="table-responsive">
         <table class="table table-striped">
             <thead class="text-center">
@@ -37,9 +38,96 @@
                 <?php endforeach; ?>
             </tbody>
         </table>
+        <!-- Paginación -->
+        <div class="d-flex justify-content-center">
+            <nav>
+                <ul class="pagination">
+                    <?php
+                    // Si estamos en la página 1, no mostrar enlace "Anterior"
+                    if ($ventas['paginaActual'] > 1):
+                    ?>
+                        <li class="page-item">
+                            <a class="page-link" href="?pagina=<?php echo $ventas['paginaActual'] - 1; ?>&titulo=<?php echo htmlspecialchars($_GET['titulo'] ?? ''); ?>">Anterior</a>
+                        </li>
+                    <?php endif; ?>
+
+                    <?php
+                    // Mostrar los enlaces de las páginas
+                    for ($i = 1; $i <= $ventas['totalPaginas']; $i++):
+                    ?>
+                        <li class="page-item <?php echo $i === $ventas['paginaActual'] ? 'active' : ''; ?>">
+                            <a class="page-link" href="?pagina=<?php echo $i; ?>&titulo=<?php echo htmlspecialchars($_GET['titulo'] ?? ''); ?>">
+                                <?php echo $i; ?>
+                            </a>
+                        </li>
+                    <?php endfor; ?>
+
+                    <?php
+                    // Si no estamos en la última página, mostrar el enlace "Siguiente"
+                    if ($ventas['paginaActual'] < $ventas['totalPaginas']):
+                    ?>
+                        <li class="page-item">
+                            <a class="page-link" href="?pagina=<?php echo $ventas['paginaActual'] + 1; ?>&titulo=<?php echo htmlspecialchars($_GET['titulo'] ?? ''); ?>">Siguiente</a>
+                        </li>
+                    <?php endif; ?>
+                </ul>
+            </nav>
+        </div>
     </div>
 </main>
+<dialog id="ModalVentaCertificados">
+    <div class="d-flex justify-content-between align-items-center position-relative  mb-4" style="z-index: 999;">
+        <h5 class="card-title" id="vistaNombre">Reporte ventas</h5>
+        <!-- <form action="" method="dialog">
+            <button type="submit" class="btn-close" id="closeVentaCertificados" aria-label="Close"></button>
+        </form> -->
+    </div>
+    <form id="reportVentasCertificado" method="GET">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="tipo">Tipo</label>
+                    <select disabled id="tipo" name="tipo" class="form-select">
+                        <option value="certificado" selected <?php echo ($_GET['tipo'] == 'certificado') ? 'selected' : ''; ?>>certificado</option>
+                    </select>
 
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="user">Usuarios</label>
+                    <select id="user" disabled name="user" class="form-select"
+                        value="<?php echo htmlspecialchars($_GET['user'] ?? ''); ?>">
+                        <option value="<?php echo $username ?>" selected> <?php echo $username ?></option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="fechaInicio">Fecha de inicio</label>
+                    <input type="date" id="fechaInicio" name="fechaInicio" class="form-control"
+                        value="<?php echo htmlspecialchars($_GET['fechaInicio'] ?? ''); ?>">
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="fechaFin">Fecha de fin</label>
+                    <input type="date" id="fechaFin" name="fechaFin" class="form-control"
+                        value="<?php echo htmlspecialchars($_GET['fechaFin'] ?? ''); ?>">
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between gap-2 col-12">
+                <button type="submit" class="btn btn-primary" id="certificadosExcelVentas">Descargar Reporte Excel</button>
+                <button type="submit" class="btn btn-danger" id="certificadosPdfVentas">Descargar Reporte PDF</button>
+            </div>
+        </div>
+    </form>
+
+</dialog>
 <dialog id="agregarVenta">
     <form id="formVentas" method="post">
         <input type="text" id="id" name="id" hidden>
@@ -52,7 +140,7 @@
                 <label for="curso" class="form-label">Certificado</label>
                 <input type="text" list="listCursos" class="form-control" id="curso" name="curso" placeholder="Título">
                 <datalist id="listCursos">
-                    <?php foreach ($certificados as $certificado): ?>
+                    <?php foreach ($certificados['certificados'] as $certificado): ?>
                         <option value="<?php echo $certificado['titulo']; ?>" data-id="<?php echo $certificado['id']; ?>" data-price="<?php echo $certificado['precio']; ?>"></option>
                     <?php endforeach; ?>
                 </datalist>
@@ -62,7 +150,7 @@
                 <label for="estudiante" class="form-label">Estudiante</label>
                 <input type="text" list="listEstudiante" class="form-control" id="estudiante" name="estudiante" placeholder="Nombre">
                 <datalist id="listEstudiante">
-                    <?php foreach ($estudiantes as $estudiante): ?>
+                    <?php foreach ($estudiantes['estudiantes'] as $estudiante): ?>
                         <option value="<?php echo $estudiante['nombres'] . ' ' . $estudiante['apellidos']; ?>" data-es="<?php echo $estudiante['id']; ?>" data-ci="<?php echo $estudiante['carnet']; ?>"><?php echo $estudiante['nombres'] . ' ' . $estudiante['apellidos']; ?></option>
                     <?php endforeach; ?>
                 </datalist>
@@ -94,6 +182,31 @@
 </dialog>
 
 <script>
+    $('#ventaCertificado').addEventListener('click', () => {
+        $('#ModalVentaCertificados').showModal()
+    })
+
+    $('#certificadosExcelVentas').addEventListener('click', (e) => {
+        e.preventDefault();
+        const fechaInicio = $('#fechaInicio').value;
+        const fechaFin = $('#fechaFin').value;
+        const tipo = $('#tipo').value;
+        const user = $('#user').value;
+        const url = `/dashboard/reportes/ventas-excel?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}&tipo=${tipo}&user=${user}`;
+        $('#reportVentasCertificado').setAttribute('action', url);
+        $('#reportVentasCertificado').submit();
+    })
+    $('#certificadosPdfVentas').addEventListener('click', (e) => {
+        e.preventDefault();
+        const fechaInicio = $('#fechaInicio').value;
+        const fechaFin = $('#fechaFin').value;
+        const tipo = $('#tipo').value;
+        const user = $('#user').value;
+        const url = `/dashboard/reportes/ventas-pdf?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}&tipo=${tipo}&user=${user}`;
+        $('#reportVentasCertificado').setAttribute('action', url);
+        $('#reportVentasCertificado').submit();
+    })
+
     // Mostrar el modal para agregar una venta
     $('#agregarVentaModal').addEventListener('click', () => {
         $('#agregarVenta').showModal();

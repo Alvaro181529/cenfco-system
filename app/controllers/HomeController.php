@@ -17,6 +17,7 @@ class HomeController
         } else {
             $success = "";
         }
+        $dashboardModel = new DashboardModel();
         $cursos = $this->homeModel->obtenerCursos();
         $categorias = $this->homeModel->obtenerCategorias();
         $cursosPorCategoria = [];
@@ -25,6 +26,10 @@ class HomeController
                 return $curso['categoria'] === $categoria['categoria'];
             });
         }
+        $cantidadEstudiantes = $dashboardModel->cantidadEstudiantes();
+        $cantidadDocentes = $dashboardModel->cantidadDocentes();
+        $cantidadCursos = $dashboardModel->cantidadCursos();
+        $cantidadInventario = $dashboardModel->cantidadInventario();
         $eventos = $this->homeModel->obtenerEventos();
         require __DIR__ . '/../views/home.php';
     }

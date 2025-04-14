@@ -16,24 +16,35 @@ class CursosController
 
     public function cursos()
     {
-        if ($_SESSION['user']['role']) {
-        } else {
-            header('Location: / ');
+        // Verificación de rol
+        if (!isset($_SESSION['user']['role'])) {
+            header('Location: /');
             exit();
         }
+
+        // Obtener los filtros de la URL
         $titulo = isset($_GET['titulo']) ? $_GET['titulo'] : null;
         $descripcion = isset($_GET['descripcion']) ? $_GET['descripcion'] : null;
         $categoria = isset($_GET['categoria']) ? $_GET['categoria'] : null;
+
+        // Obtener parámetros de paginación
+        $pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;  // Página por defecto es 1
+        $resultadosPorPagina = isset($_GET['resultadosPorPagina']) ? (int)$_GET['resultadosPorPagina'] : 10;  // 10 resultados por página por defecto
+
+        // Instanciar modelos
         $docentesModel = new DocentesModel();
         $cursosModel = new CursosModel();
+
+        // Obtener docentes
         $docentes = $docentesModel->obtenerDocentes();
-        if (empty($titulo) && empty($descripcion && empty($categoria))) {
-            $cursos = $cursosModel->obtenerCursos();
-            return  require __DIR__ . '/../../views/dashboard/cursos.php';
-        }
-        $cursos = $cursosModel->buscarCursos($titulo, $descripcion, $categoria);
-        return  require __DIR__ . '/../../views/dashboard/cursos.php';
+
+        // Buscar cursos con los filtros
+        $cursos = $cursosModel->obtenerCursos($titulo, $descripcion, $categoria, $pagina, $resultadosPorPagina);
+
+        // Pasar los resultados y la información de paginación a la vista
+        return require __DIR__ . '/../../views/dashboard/cursos.php';
     }
+
 
     public function Guardado()
     {

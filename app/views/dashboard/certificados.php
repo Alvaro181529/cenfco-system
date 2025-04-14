@@ -1,6 +1,6 @@
 <?php require 'template/head.php' ?>
 <?php require 'template/navbar.php' ?>
-<main id="main" class="container">
+<main id="main" class="container" data-aos="fade-up">
     <div class="row mb-3">
         <div class="col-12">
             <form class="d-flex" method="get" action="/dashboard/certificados">
@@ -9,6 +9,8 @@
             </form>
         </div>
     </div>
+    
+    <!-- Tabla de resultados -->
     <div class="table-responsive">
         <table class="table table-striped">
             <thead class="text-center">
@@ -22,7 +24,7 @@
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($certificados as $certificado): ?>
+                <?php foreach ($certificados['certificados'] as $certificado): ?>
                     <tr>
                         <th scope="row"><?php echo str_pad($certificado['id'], 5, '0', STR_PAD_LEFT); ?></th>
                         <td><?php echo $certificado['titulo']; ?></td>
@@ -42,8 +44,44 @@
             </tbody>
         </table>
 
+        <!-- Paginación -->
+        <div class="d-flex justify-content-center">
+            <nav>
+                <ul class="pagination">
+                    <?php
+                    // Si estamos en la página 1, no mostrar enlace "Anterior"
+                    if ($certificados['paginaActual'] > 1):
+                    ?>
+                        <li class="page-item">
+                            <a class="page-link" href="?pagina=<?php echo $certificados['paginaActual'] - 1; ?>&titulo=<?php echo htmlspecialchars($_GET['titulo'] ?? ''); ?>">Anterior</a>
+                        </li>
+                    <?php endif; ?>
+
+                    <?php
+                    // Mostrar los enlaces de las páginas
+                    for ($i = 1; $i <= $certificados['totalPaginas']; $i++):
+                    ?>
+                        <li class="page-item <?php echo $i === $certificados['paginaActual'] ? 'active' : ''; ?>">
+                            <a class="page-link" href="?pagina=<?php echo $i; ?>&titulo=<?php echo htmlspecialchars($_GET['titulo'] ?? ''); ?>">
+                                <?php echo $i; ?>
+                            </a>
+                        </li>
+                    <?php endfor; ?>
+
+                    <?php
+                    // Si no estamos en la última página, mostrar el enlace "Siguiente"
+                    if ($certificados['paginaActual'] < $certificados['totalPaginas']):
+                    ?>
+                        <li class="page-item">
+                            <a class="page-link" href="?pagina=<?php echo $certificados['paginaActual'] + 1; ?>&titulo=<?php echo htmlspecialchars($_GET['titulo'] ?? ''); ?>">Siguiente</a>
+                        </li>
+                    <?php endif; ?>
+                </ul>
+            </nav>
+        </div>
     </div>
 </main>
+
 <dialog id="agregarCertificado">
     <form id="formCertificados" method="post">
         <input type="text" id="id" name="id" hidden>

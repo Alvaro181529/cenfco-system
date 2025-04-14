@@ -1,14 +1,17 @@
 <?php require 'template/head.php' ?>
 <?php require 'template/navbar.php' ?>
-<main id="main" class="container">
+<main id="main" class="container" data-aos="fade-up">
     <div class="row mb-3">
         <div class="col-12">
+            <!-- Formulario de búsqueda -->
             <form class="d-flex" method="get" action="/dashboard/comentarios">
                 <input class="form-control me-2" type="search" placeholder="Buscar comentarios por asunto..." aria-label="Buscar" value="<?php echo htmlspecialchars($_GET['asunto'] ?? ''); ?>" name="asunto">
+                <input class="form-control me-2" type="search" placeholder="Buscar comentarios por nombre..." aria-label="Buscar" value="<?php echo htmlspecialchars($_GET['nombre'] ?? ''); ?>" name="nombre">
                 <button class="btn btn-outline-success" type="submit">Buscar</button>
             </form>
         </div>
     </div>
+
     <div class="table-responsive">
         <table class="table table-striped">
             <thead class="text-center">
@@ -22,7 +25,7 @@
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($comentarios as $comentario): ?>
+                <?php foreach ($comentarios['comentarios'] as $comentario): ?>
                     <tr>
                         <th scope="row"><?php echo str_pad($comentario['id'], 5, '0', STR_PAD_LEFT); ?></th>
                         <td><?php echo $comentario['nombre']; ?></td>
@@ -41,6 +44,42 @@
                 <?php endforeach; ?>
             </tbody>
         </table>
+
+        <!-- Paginación -->
+        <div class="d-flex justify-content-center">
+            <nav>
+                <ul class="pagination">
+                    <?php
+                    // Si estamos en la página 1, no mostrar enlace "Anterior"
+                    if ($comentarios['paginaActual'] > 1):
+                    ?>
+                        <li class="page-item">
+                            <a class="page-link" href="?pagina=<?php echo $comentarios['paginaActual'] - 1; ?>&asunto=<?php echo htmlspecialchars($_GET['asunto'] ?? ''); ?>&nombre=<?php echo htmlspecialchars($_GET['nombre'] ?? ''); ?>">Anterior</a>
+                        </li>
+                    <?php endif; ?>
+
+                    <?php
+                    // Mostrar los enlaces de las páginas
+                    for ($i = 1; $i <= $comentarios['totalPaginas']; $i++):
+                    ?>
+                        <li class="page-item <?php echo $i === $comentarios['paginaActual'] ? 'active' : ''; ?>">
+                            <a class="page-link" href="?pagina=<?php echo $i; ?>&asunto=<?php echo htmlspecialchars($_GET['asunto'] ?? ''); ?>&nombre=<?php echo htmlspecialchars($_GET['nombre'] ?? ''); ?>">
+                                <?php echo $i; ?>
+                            </a>
+                        </li>
+                    <?php endfor; ?>
+
+                    <?php
+                    // Si no estamos en la última página, mostrar el enlace "Siguiente"
+                    if ($comentarios['paginaActual'] < $comentarios['totalPaginas']):
+                    ?>
+                        <li class="page-item">
+                            <a class="page-link" href="?pagina=<?php echo $comentarios['paginaActual'] + 1; ?>&asunto=<?php echo htmlspecialchars($_GET['asunto'] ?? ''); ?>&nombre=<?php echo htmlspecialchars($_GET['nombre'] ?? ''); ?>">Siguiente</a>
+                        </li>
+                    <?php endif; ?>
+                </ul>
+            </nav>
+        </div>
     </div>
 </main>
 

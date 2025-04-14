@@ -249,17 +249,22 @@ class ReportesController
     }
     public function descargarPdfVenta()
     {
-        $fechaInicio = isset($_GET['fechaInicio']) ? $_GET['fechaInicio'] : null;
-        $fechaFin = isset($_GET['fechaFin']) ? $_GET['fechaFin'] : null;
-        $tipo = isset($_GET['tipo']) ? $_GET['tipo'] : null;
-        $user = isset($_GET['user']) ? $_GET['user'] : null;
+        $fechaInicio = isset($_GET['fechaInicio']) ? $_GET['fechaInicio'] : (isset($_POST['fechaInicio']) ? $_POST['fechaInicio'] : null);
+        $fechaFin = isset($_GET['fechaFin']) ? $_GET['fechaFin'] : (isset($_POST['fechaFin']) ? $_POST['fechaFin'] : null);
+        $tipo = isset($_GET['tipo']) ? $_GET['tipo'] : (isset($_POST['tipo']) ? $_POST['tipo'] : null);
+        $user = isset($_GET['user']) ? $_GET['user'] : (isset($_POST['user']) ? $_POST['user'] : null);
 
         $ventasModel = new VentasModel();
 
         if (empty($fechaFin) && empty($fechaInicio) && empty($tipo) && empty($user)) {
             $total = $ventasModel->obtenerTotalVentas($user, $tipo);
+            error_log($user);
+            error_log($tipo);
             $reportes = $this->reportesModel->obtenerReportesVenta();
         } else {
+            error_log("jsdksam");
+            error_log($user);
+            error_log($tipo);
             $total = $ventasModel->obtenerTotalVentas($user, $tipo);
             $reportes = $this->reportesModel->ventasReportes($fechaInicio, $fechaFin, $tipo, $user);
         }

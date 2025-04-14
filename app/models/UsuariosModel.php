@@ -12,42 +12,108 @@ class UsuariosModel
             die("Error: Conexión a la base de datos no establecida.");
         }
     }
-    public function buscarUsuarios($searchTerm)
+    public function obtenerUsuarios($searchTerm = null, $pagina = 1, $resultadosPorPagina = 10)
     {
-        // Evitar SQL Injection usando preparación de sentencias
-        $query = "SELECT * FROM users WHERE username LIKE ? OR correo LIKE ?";
+        // Validar los parámetros de paginación
+        if (!is_int($pagina) || $pagina <= 0) {
+            return "Error: El parámetro 'pagina' debe ser un número entero mayor que 0.";
+        }
+
+        if (!is_int($resultadosPorPagina) || $resultadosPorPagina <= 0) {
+            return "Error: El parámetro 'resultadosPorPagina' debe ser un número entero mayor que 0.";
+        }
+
+        // Calculamos el offset para la paginación
+        $offset = ($pagina - 1) * $resultadosPorPagina;
+
+        // Comenzamos con la consulta base
+        $query = "SELECT * FROM users WHERE 1=1"; // '1=1' es útil para concatenar condiciones adicionales
+
+        // Agregar condiciones de filtro si se proporciona el término de búsqueda
+        if ($searchTerm) {
+            $query .= " AND (username LIKE ? OR correo LIKE ?)";
+        }
+
+        // Agregar LIMIT y OFFSET para la paginación
+        $query .= " LIMIT ? OFFSET ?";
+
+        // Preparar la consulta
         $stmt = $this->db->prepare($query);
 
-        // Escapar el término de búsqueda para agregarlo en la consulta LIKE
-        $searchTerm = "%" . $searchTerm . "%";
-        $stmt->bind_param("ss", $searchTerm, $searchTerm);
+        // Crear el array de parámetros y el tipo de datos para enlazar
+        $params = [];
+        $types = '';
 
+        // Agregar el término de búsqueda si existe
+        if ($searchTerm) {
+            $searchTerm = "%" . $searchTerm . "%";
+            $params[] = $searchTerm;
+            $params[] = $searchTerm;
+            $types .= 'ss'; // 'ss' para dos strings
+        }
+
+        // Agregar los parámetros de LIMIT y OFFSET
+        $params[] = $resultadosPorPagina;
+        $params[] = $offset;
+        $types .= 'ii'; // 'ii' para enteros (LIMIT y OFFSET)
+
+        // Enlazar los parámetros
+        if ($params) {
+            $stmt->bind_param($types, ...$params);
+        }
+
+        // Ejecutar la consulta y obtener los resultados
         if ($stmt->execute()) {
             $result = $stmt->get_result();
-            $usuarios = [];
-            while ($row = $result->fetch_assoc()) {
-                $usuarios[] = $row;
-            }
-            return $usuarios; // Devuelve un array de usuarios que coinciden con la búsqueda
+            $usuarios = $result->fetch_all(MYSQLI_ASSOC);
         } else {
             return "Error: " . $this->db->error;
         }
-    }
-    public function obtenerUsuarios()
-    {
-        $query = "SELECT * FROM users";
-        $result = $this->db->query($query);
-        if ($result) {
-            $usuarios = [];
-            while ($row = $result->fetch_assoc()) {
-                $usuarios[] = $row;
-            }
-            return $usuarios;
-        } else {
-            return "Error: " . $this->db->error;
-        }
-    }
 
+        // Obtener el número total de usuarios para la paginación
+        $queryTotal = "SELECT COUNT(*) AS total FROM users WHERE 1=1";
+        if ($searchTerm) {
+            $queryTotal .= " AND (username LIKE ? OR correo LIKE ?)";
+        }
+
+        // Preparar la consulta para obtener el total de usuarios
+        $stmtTotal = $this->db->prepare($queryTotal);
+
+        // Enlazar los parámetros de filtro
+        $paramsTotal = [];
+        $typesTotal = '';
+        if ($searchTerm) {
+            $paramsTotal[] = $searchTerm;
+            $paramsTotal[] = $searchTerm;
+            $typesTotal .= 'ss';
+        }
+
+        // Enlazar los parámetros
+        if ($paramsTotal) {
+            $stmtTotal->bind_param($typesTotal, ...$paramsTotal);
+        }
+
+        // Ejecutar la consulta para obtener el total de usuarios
+        $stmtTotal->execute();
+        $resultTotal = $stmtTotal->get_result();
+
+        if ($resultTotal) {
+            $totalUsuarios = $resultTotal->fetch_assoc()['total'];
+        } else {
+            return "Error al obtener el total de usuarios: " . $this->db->error;
+        }
+
+        // Calcular el número total de páginas
+        $totalPaginas = ceil($totalUsuarios / $resultadosPorPagina);
+
+        // Devolver los resultados con la paginación
+        return [
+            'usuarios' => $usuarios,
+            'totalUsuarios' => $totalUsuarios,
+            'totalPaginas' => $totalPaginas,
+            'paginaActual' => $pagina
+        ];
+    }
     public function obtenerUsuariosPorId($id)
     {
         if (empty($id)) {

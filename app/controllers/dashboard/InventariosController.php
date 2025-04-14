@@ -12,17 +12,15 @@ class InventariosController
     public function inventario()
     {
         if ($_SESSION['user']['role']) {
-        }else{
+        } else {
             header('Location: / ');
             exit();
         }
         $nombre = isset($_GET['nombre']) ? $_GET['nombre'] : null;
+        $pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+        $resultadosPorPagina = isset($_GET['resultadosPorPagina']) ? (int)$_GET['resultadosPorPagina'] : 10;
         $inventariosModel = new InventariosModel();
-        if (empty($nombre)) {
-            $inventarios = $inventariosModel->obtenerInventarios();
-            return require __DIR__ . '/../../views/dashboard/inventario.php';
-        }
-        $inventarios = $inventariosModel->buscarInventarios($nombre);
+        $inventarios = $inventariosModel->obtenerInventarios($nombre, $pagina, $resultadosPorPagina);
         return require __DIR__ . '/../../views/dashboard/inventario.php';
     }
 

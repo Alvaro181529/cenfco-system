@@ -30,7 +30,6 @@ class AuthModel
         $stmt = $this->db->prepare("SELECT * FROM users WHERE correo = ?");
 
         if (!$stmt) {
-            error_log("Error al preparar la consulta: " . $this->db->error);
             return false;
         }
         $stmt->bind_param("s", $correo);

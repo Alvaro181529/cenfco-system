@@ -17,12 +17,11 @@ class DocentesController
             exit();
         }
         $docentesModel = new DocentesModel();
-        $docentes = $docentesModel->obtenerDocentes();
-        $query = $_GET['query'] ?? '';
-        if (empty($query)) {
-            return require __DIR__ . '/../../views/dashboard/docentes.php';
-        }
-        $docentes = $this->docentesModel->buscarDocentes($query);
+        $pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+        $resultadosPorPagina = isset($_GET['resultadosPorPagina']) ? (int)$_GET['resultadosPorPagina'] : 10;
+        $query = isset($_GET['query']) ? $_GET['query'] : ''; // Se obtiene el parámetro 'query' si está presente        
+ 
+        $docentes = $docentesModel->obtenerDocentes($query, $pagina, $resultadosPorPagina);
         return require __DIR__ . '/../../views/dashboard/docentes.php';
     }
 

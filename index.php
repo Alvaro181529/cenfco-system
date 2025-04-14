@@ -1,5 +1,6 @@
 <?php
 require 'vendor/autoload.php';
+require_once 'app/lib/chatbot.php';
 require_once 'app/controllers/HomeController.php';
 require_once 'app/controllers/DashboardController.php';
 require_once 'app/controllers/AuthController.php';
@@ -13,14 +14,18 @@ require_once 'app/controllers/dashboard/UsuariosController.php';
 require_once 'app/controllers/dashboard/VentasController.php';
 require_once 'app/controllers/dashboard/ReportesController.php';
 require_once 'app/controllers/dashboard/ComentarioController.php';
-require_once 'app/lib/chatbot.php';
+require_once 'app/controllers/dashboard/blog/MenusController.php';
+require_once 'app/controllers/dashboard/blog/PaginasController.php';
+require_once 'app/controllers/dashboard/blog/PostsController.php';
+require_once 'app/controllers/ChatbotController.php';
 
 $router = new AltoRouter();
 
-//
+//Home controller
 $homeController = new HomeController();
 $DashboardController = new DashboardController();
 $AuthController = new AuthController();
+$ChatbotController = new ChatbotController();
 $chat = new Chatbot();
 
 //Dashboard controller
@@ -34,6 +39,9 @@ $InventariosController = new InventariosController();
 $VentasController = new VentasController();
 $ReportesController = new ReportesController();
 $ComentariosController = new ComentariosController();
+$MenusController = new MenusController();
+$PagesController = new PaginasController();
+$PostsController = new PostsController();
 
 //Auth
 $router->map('GET', '/login', [$AuthController, 'login']);
@@ -51,9 +59,9 @@ $router->map('POST', '/chatbot', [$chat, 'chat']);
 
 //Dashboard rutas
 $router->map('GET', '/dashboard', [$DashboardController, 'dashboard']);
-$router->map('GET', '/dashboard/preguntas', [$DashboardController, 'preguntas']);
 $router->map('GET', '/dashboard/blog', [$DashboardController, 'blog']);
-$router->map('GET', '/dashboard/chatbot', [$DashboardController, 'chatbot']);
+$router->map('GET', '/dashboard/preguntas', [$DashboardController, 'preguntas']);
+// $router->map('GET', '/dashboard/chatbot', [$DashboardController, 'chatbot']);
 
 //Reportes
 $router->map('GET', '/dashboard/reportes', [$ReportesController, 'Reportes']);
@@ -61,6 +69,8 @@ $router->map('GET', '/dashboard/reportes/certificados-excel', [$ReportesControll
 $router->map('GET', '/dashboard/reportes/certificados-pdf', [$ReportesController, 'descargarPdfCertificados']);
 $router->map('GET', '/dashboard/reportes/ventas-excel', [$ReportesController, 'descargarExcelVenta']);
 $router->map('GET', '/dashboard/reportes/ventas-pdf', [$ReportesController, 'descargarPdfVenta']);
+$router->map('POST', '/dashboard/reportes/ventas-excel', [$ReportesController, 'descargarExcelVenta']);
+$router->map('POST', '/dashboard/reportes/ventas-pdf', [$ReportesController, 'descargarPdfVenta']);
 $router->map('GET', '/dashboard/reportes/inventario-excel', [$ReportesController, 'descargarExcelInventario']);
 $router->map('GET', '/dashboard/reportes/inventario-pdf', [$ReportesController, 'descargarPdfInventario']);
 $router->map('GET', '/dashboard/reportes/docentes-excel', [$ReportesController, 'descargarExcelDocentes']);
@@ -140,6 +150,34 @@ $router->map('GET', '/dashboard/inventario/[i:id]', [$InventariosController, 'Ob
 $router->map('POST', '/dashboard/inventario', [$InventariosController, 'Guardado']);
 $router->map('POST', '/dashboard/inventario/actualizar', [$InventariosController, 'Actualizar']);
 $router->map('DELETE', '/dashboard/inventario/eliminar', [$InventariosController, 'Eliminar']);
+
+//chatbot
+$router->map('GET', '/dashboard/chatbot', [$ChatbotController, 'chatbot']);
+$router->map('GET', '/dashboard/chatbot/[i:id]', [$ChatbotController, 'ObtenerChatbot']);
+$router->map('POST', '/dashboard/chatbot', [$ChatbotController, 'guardar']);
+$router->map('POST', '/dashboard/chatbot/actualizar', [$ChatbotController, 'actualizar']);
+$router->map('DELETE', '/dashboard/chatbot/eliminar', [$ChatbotController, 'eliminar']);
+
+//Blog -> menu
+// $router->map('GET', '/dashboard/blog', [$MenusController, 'menus']);
+$router->map('GET', '/dashboard/menus/[i:id]', [$MenusController, 'obtenerMenu']);
+$router->map('POST', '/dashboard/menus', [$MenusController, 'guardar']);
+$router->map('POST', '/dashboard/menus/actualizar', [$MenusController, 'actualizar']);
+$router->map('DELETE', '/dashboard/menus/eliminar', [$MenusController, 'eliminar']);
+
+//Blog -> paginas
+// $router->map('GET', '/dashboard/blog', [$PagesController, 'pages']);
+$router->map('GET', '/dashboard/pages/[i:id]', [$PagesController, 'obtenerPage']);
+$router->map('POST', '/dashboard/pages', [$PagesController, 'guardar']);
+$router->map('POST', '/dashboard/pages/actualizar', [$PagesController, 'actualizar']);
+$router->map('DELETE', '/dashboard/pages/eliminar', [$PagesController, 'eliminar']);
+
+//Blog -> posts
+// $router->map('GET', '/dashboard/blog', [$PostsController, 'posts']);
+$router->map('GET', '/dashboard/posts/[i:id]', [$PostsController, 'obtenerPost']);
+$router->map('POST', '/dashboard/posts', [$PostsController, 'guardar']);
+$router->map('POST', '/dashboard/posts/actualizar', [$PostsController, 'actualizar']);
+$router->map('DELETE', '/dashboard/posts/eliminar', [$PostsController, 'eliminar']);
 
 $match = $router->match();
 

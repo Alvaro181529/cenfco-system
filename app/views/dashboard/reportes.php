@@ -1,7 +1,7 @@
 <?php require 'template/head.php'; ?>
 <?php require 'template/navbar.php'; ?>
 
-<main id="main" class="container">
+<main id="main" class="container" data-aos="fade-up">
     <div class="row gap-4">
         <div class="card mb-3 col" style="max-width: 540px;" id="certificado">
             <div class="row g-0">
@@ -112,7 +112,7 @@
     </dialog>
     <dialog id="ModalVentaCertificados">
         <div class="d-flex justify-content-between align-items-center position-relative  mb-4" style="z-index: 999;">
-            <h5 class="card-title" id="vistaNombre">Reporte certificado</h5>
+            <h5 class="card-title" id="vistaNombre">Reporte ventas</h5>
             <button type="button" class="btn-close" id="closeVentaCertificados" aria-label="Close"></button>
         </div>
         <form id="reportVentasCertificado" method="GET">
@@ -135,7 +135,7 @@
                         <select id="user" name="user" class="form-select"
                             value="<?php echo htmlspecialchars($_GET['user'] ?? ''); ?>">
                             <option value="" <?php echo (empty($_GET['user'])) ? 'selected' : ''; ?>>Todos los usuarios</option>
-                            <?php foreach ($usuarios as $usuario): ?>
+                            <?php foreach ($usuarios['usuarios'] as $usuario): ?>
                                 <option value="<?php echo $usuario['username'] ?>"><?php echo $usuario['username'] ?></option>
                             <?php endforeach; ?>
                         </select>

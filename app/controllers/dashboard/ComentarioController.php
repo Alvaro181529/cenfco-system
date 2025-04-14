@@ -13,23 +13,25 @@ class ComentariosController
     // Método para mostrar todos los comentarios o filtrarlos por asunto
     public function comentarios()
     {
+        // Verifica si el usuario tiene el rol adecuado
         if ($_SESSION['user']['role']) {
-            // Puedes agregar lógica de roles si es necesario
+            // Obtenemos los parámetros de búsqueda desde la URL
+            $asunto = isset($_GET['asunto']) ? $_GET['asunto'] : null;
+            $nombre = isset($_GET['nombre']) ? $_GET['nombre'] : null;
+            $pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1; // Si no se pasa página, se asume página 1
+
+    
+            // Llamamos al modelo para buscar los comentarios con los filtros de asunto y nombre y la paginación
+            $comentarios = $this->comentariosModel->obtenerComentarios($asunto, $nombre, $pagina);
+            // Pasamos los datos a la vista
+            return require __DIR__ . '/../../views/dashboard/comentarios.php';
         } else {
-            header('Location: / ');
+            // Si el usuario no tiene rol adecuado, lo redirigimos a la página principal
+            header('Location: /');
             exit();
         }
-
-        $asunto = isset($_GET['asunto']) ? $_GET['asunto'] : null;
-        if (empty($asunto)) {
-            $comentarios = $this->comentariosModel->obtenerComentarios();
-            return require __DIR__ . '/../../views/dashboard/comentarios.php';
-        }
-
-        $comentarios = $this->comentariosModel->buscarComentarios($asunto);
-        return require __DIR__ . '/../../views/dashboard/comentarios.php';
     }
-
+    
     // Método para guardar un nuevo comentario
     public function Guardado()
     {

@@ -9,21 +9,20 @@ class UsuariosController
     {
         $this->usuariosModel = new UsuariosModel();
     }
-    
+
     public function usuarios()
     {
         if ($_SESSION['user']['role']) {
-        }else{
+        } else {
             header('Location: / ');
             exit();
         }
         $searchTerm = $_GET['search'] ?? '';
+        $pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+        $resultadosPorPagina = isset($_GET['resultadosPorPagina']) ? (int)$_GET['resultadosPorPagina'] : 10;
+
         $usuariosModel = new UsuariosModel();
-        if (empty($searchTerm)) {
-            $usuarios = $usuariosModel->obtenerUsuarios();
-            return require __DIR__ . '/../../views/dashboard/usuarios.php';
-        }
-        $usuarios = $usuariosModel->buscarUsuarios($searchTerm);
+        $usuarios = $usuariosModel->obtenerUsuarios($searchTerm, $pagina, $resultadosPorPagina);
         return require __DIR__ . '/../../views/dashboard/usuarios.php';
     }
     public function Guardado()

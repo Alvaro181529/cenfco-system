@@ -173,7 +173,6 @@ class VentasModel
         $query2 = 'SET FOREIGN_KEY_CHECKS=0';
         $stmt2 = $this->db->prepare($query2);
         $stmt2->execute();
-        error_log(" Curso ID: $id_curso, Certificado ID: $id_certificado, Estudiante ID: $id_estudiante, Nombre: $externoNombre, Carnet: $externoCarnet, Precio: $precio, Descripción: $descripcion, Tipo: $tipo, Usuario: $user");
         $query = "INSERT INTO ventas (id_curso, id_certificado, id_estudiante, externoNombre, externoCarnet, precio, descripcion, tipo, user) 
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)";
         $stmt = $this->db->prepare($query);

@@ -12,20 +12,24 @@ class VentasController
     public function ventasCertificados()
     {
         if ($_SESSION['user']['role']) {
-        }else{
+        } else {
             header('Location: / ');
             exit();
         }
-        $username = $_SESSION['user']['username'];
+        $pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+        $resultadosPorPagina = isset($_GET['resultadosPorPagina']) ? (int)$_GET['resultadosPorPagina'] : 10;
         $certificadosModel = new CertificadosModel();
         $estudiantesModel = new EstudiantesModel();
+
         $estudiantes = $estudiantesModel->obtenerEstudiantes();
         $certificados = $certificadosModel->obtenerCertificados();
+        $username = $_SESSION['user']['username'];
+        
         if ($_SESSION['user']['role'] == "Administrador") {
-            $ventas = $this->ventasModel->obtenerVentas('', 'certificado');
+            $ventas = $this->ventasModel->obtenerVentas('', 'certificado', $pagina, $resultadosPorPagina);
             $total = $this->ventasModel->obtenerTotalVentas('', 'certificado');
         } else {
-            $total = $this->ventasModel->obtenerVentas($username, 'certificado');
+            $total = $this->ventasModel->obtenerVentas($username, 'certificado', $pagina, $resultadosPorPagina);
             $ventas = $this->ventasModel->obtenerTotalVentas($username, 'certificado');
         }
         require __DIR__ . '/../../views/dashboard/ventasCertificados.php';
@@ -33,7 +37,7 @@ class VentasController
     public function ventasCursos()
     {
         if ($_SESSION['user']['role']) {
-        }else{
+        } else {
             header('Location: / ');
             exit();
         }
@@ -67,7 +71,6 @@ class VentasController
         $precio = $_POST['precio'] ?? '';
         $descripcion = $_POST['descripcion'] ?? '';
         $tipo = $_POST['tipo'] ?? '';
-        error_log($id_estudiante);
         if (empty($precio) || empty($tipo)) {
             echo "Todos los campos son obligatorios.";
             return;

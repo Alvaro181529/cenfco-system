@@ -12,21 +12,27 @@ class CertificadosController
 
     public function certificados()
     {
-        if ($_SESSION['user']['role']) {
-        }else{
-            header('Location: / ');
+        // Verificamos si el usuario tiene acceso
+        if (!isset($_SESSION['user']['role'])) {
+            header('Location: /');
             exit();
         }
-        $titulo = isset($_GET['titulo']) ? $_GET['titulo'] : null;
-        $certificadosModel = new CertificadosModel();
-        if (empty($titulo)) {
-            $certificados = $certificadosModel->obtenerCertificados();
-            return require __DIR__ . '/../../views/dashboard/certificados.php';
-        }
         
-        $certificados = $certificadosModel->buscarCertificados($titulo);
+        // Recoger parámetros de la solicitud (título de búsqueda y número de página)
+        $titulo = isset($_GET['titulo']) ? $_GET['titulo'] : null;
+        $pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1; // Si no se pasa página, se asume página 1
+        $resultadosPorPagina = 10; // Número de resultados por página
+        
+        // Crear una instancia del modelo de certificados
+        $certificadosModel = new CertificadosModel();
+    
+        // Obtener los certificados paginados
+        $certificados = $certificadosModel->obtenerCertificados($titulo, $pagina, $resultadosPorPagina);
+    
+        // Pasamos los resultados a la vista
         return require __DIR__ . '/../../views/dashboard/certificados.php';
     }
+    
     public function Guardado()
     {
         $titulo = $_POST['titulo'] ?? '';

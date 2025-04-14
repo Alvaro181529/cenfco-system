@@ -14,8 +14,21 @@ class EstudiantesModel
             die("Error: Conexión a la base de datos no establecida.");
         }
     }
-    public function buscarEstudiantes($nombre = null, $apellido = null, $carnet = null)
+    // Obtener todos los estudiantes o buscar con filtros y aplicar paginación
+    public function obtenerEstudiantes($nombre = null, $apellido = null, $carnet = null, $pagina = 1, $resultadosPorPagina = 10)
     {
+        // Validación de parámetros para la paginación
+        if (!is_int($pagina) || $pagina <= 0) {
+            return "Error: El parámetro 'pagina' debe ser un número entero mayor que 0.";
+        }
+
+        if (!is_int($resultadosPorPagina) || $resultadosPorPagina <= 0) {
+            return "Error: El parámetro 'resultadosPorPagina' debe ser un número entero mayor que 0.";
+        }
+
+        // Calculamos el offset para la paginación
+        $offset = ($pagina - 1) * $resultadosPorPagina;
+
         // Comenzamos con la consulta base
         $query = "SELECT * FROM estudiantes WHERE 1=1"; // '1=1' es una condición siempre verdadera, útil para concatenar condiciones adicionales
 
@@ -28,6 +41,9 @@ class EstudiantesModel
         if ($carnet) {
             $query .= " AND carnet LIKE ?";
         }
+
+        // Agregamos los parámetros de LIMIT y OFFSET para la paginación
+        $query .= " LIMIT ? OFFSET ?";
 
         // Preparamos la consulta
         $stmt = $this->db->prepare($query);
@@ -49,6 +65,11 @@ class EstudiantesModel
             $types .= 's';
         }
 
+        // Agregamos los parámetros para LIMIT y OFFSET
+        $params[] = $resultadosPorPagina;
+        $params[] = $offset;
+        $types .= 'ii'; // 'ii' para enteros (LIMIT y OFFSET)
+
         // Enlazamos los parámetros si existen
         if ($params) {
             $stmt->bind_param($types, ...$params);
@@ -57,27 +78,59 @@ class EstudiantesModel
         // Ejecutamos la consulta y obtenemos los resultados
         if ($stmt->execute()) {
             $result = $stmt->get_result();
-            return $result->fetch_all(MYSQLI_ASSOC);
+            $estudiantes = $result->fetch_all(MYSQLI_ASSOC);
         } else {
             return "Error: " . $this->db->error;
         }
-    }
 
-    // Obtener todos los estudiantes
-    public function obtenerEstudiantes()
-    {
-        $query = "SELECT * FROM estudiantes";
-        $result = $this->db->query($query);  // Aquí ahora puedes usar $this->db
-
-        if ($result) {
-            $estudiantes = [];
-            while ($row = $result->fetch_assoc()) {
-                $estudiantes[] = $row;
-            }
-            return $estudiantes;
-        } else {
-            return "Error: " . $this->db->error;
+        // Obtener el número total de estudiantes para la paginación
+        $queryTotal = "SELECT COUNT(*) AS total FROM estudiantes WHERE 1=1";
+        if ($nombre) {
+            $queryTotal .= " AND nombres LIKE ?";
         }
+        if ($apellido) {
+            $queryTotal .= " AND apellidos LIKE ?";
+        }
+        if ($carnet) {
+            $queryTotal .= " AND carnet LIKE ?";
+        }
+
+        // Preparamos la consulta para obtener el total de estudiantes
+        $stmtTotal = $this->db->prepare($queryTotal);
+
+        if ($nombre) {
+            $nombreTotal = "%$nombre%";
+            $stmtTotal->bind_param('s',$nombreTotal);
+        }
+        if ($apellido) {
+            $apellidoTotal = "%$apellido%";
+            $stmtTotal->bind_param('s', $apellidoTotal);
+        }
+        if ($carnet) {
+            $carnetTotal = "%$carnet%";
+            $stmtTotal->bind_param('s', $carnetTotal);
+        }
+
+        // Ejecutamos la consulta total
+        $stmtTotal->execute();
+        $resultTotal = $stmtTotal->get_result();
+        
+        if ($resultTotal) {
+            $totalEstudiantes = $resultTotal->fetch_assoc()['total'];
+        } else {
+            return "Error al obtener el total de estudiantes: " . $this->db->error;
+        }
+
+        // Calcular el número total de páginas
+        $totalPaginas = ceil($totalEstudiantes / $resultadosPorPagina);
+
+        // Devolvemos los resultados con la paginación
+        return [
+            'estudiantes' => $estudiantes,
+            'totalEstudiantes' => $totalEstudiantes,
+            'totalPaginas' => $totalPaginas,
+            'paginaActual' => $pagina
+        ];
     }
 
     // Obtener estudiante por ID

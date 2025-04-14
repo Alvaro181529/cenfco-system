@@ -1,6 +1,6 @@
 <?php require 'template/head.php' ?>
 <?php require 'template/navbar.php' ?>
-<main id="main" class="container">
+<main id="main" class="container" data-aos="fade-up">
     <div class="row">
         <div class="col">
             <form action="/dashboard/cursos" method="GET" class="d-flex align-items-center">
@@ -24,7 +24,7 @@
     </div>
 
     <div class="row">
-        <?php foreach ($cursos as $curso): ?>
+        <?php foreach ($cursos['cursos'] as $curso): ?>
             <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
                 <div class="card">
                     <img class="card-img-top" src="/storage/uploads/cursos/<?php echo $curso['imagen'] ?>" alt="<?php echo $curso['titulo']; ?>" />
@@ -60,6 +60,42 @@
         <?php endforeach; ?>
 
     </div>
+
+        <!-- Paginación -->
+        <div class="d-flex justify-content-center">
+            <nav>
+                <ul class="pagination">
+                    <?php
+                    // Si estamos en la página 1, no mostrar enlace "Anterior"
+                    if ($cursos['paginaActual'] > 1):
+                    ?>
+                        <li class="page-item">
+                            <a class="page-link" href="?pagina=<?php echo $cursos['paginaActual'] - 1; ?>&titulo=<?php echo htmlspecialchars($_GET['titulo'] ?? ''); ?>">Anterior</a>
+                        </li>
+                    <?php endif; ?>
+
+                    <?php
+                    // Mostrar los enlaces de las páginas
+                    for ($i = 1; $i <= $cursos['totalPaginas']; $i++):
+                    ?>
+                        <li class="page-item <?php echo $i === $cursos['paginaActual'] ? 'active' : ''; ?>">
+                            <a class="page-link" href="?pagina=<?php echo $i; ?>&titulo=<?php echo htmlspecialchars($_GET['titulo'] ?? ''); ?>">
+                                <?php echo $i; ?>
+                            </a>
+                        </li>
+                    <?php endfor; ?>
+
+                    <?php
+                    // Si no estamos en la última página, mostrar el enlace "Siguiente"
+                    if ($cursos['paginaActual'] < $cursos['totalPaginas']):
+                    ?>
+                        <li class="page-item">
+                            <a class="page-link" href="?pagina=<?php echo $cursos['paginaActual'] + 1; ?>&titulo=<?php echo htmlspecialchars($_GET['titulo'] ?? ''); ?>">Siguiente</a>
+                        </li>
+                    <?php endif; ?>
+                </ul>
+            </nav>
+        </div>
 </main>
 <dialog id="agregarCursos" class="dialogMid">
     <form id="formCursos" method="post" enctype="multipart/form-data">

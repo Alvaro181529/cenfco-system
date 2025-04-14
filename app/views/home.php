@@ -128,14 +128,14 @@
 
                 <div class="col-lg-3 col-md-6">
                     <div class="stats-item text-center w-100 h-100">
-                        <span data-purecounter-start="0" data-purecounter-end="5000" data-purecounter-duration="1" class="purecounter"></span>
+                        <span data-purecounter-start="0" data-purecounter-end="<?php echo $cantidadEstudiantes ?>" data-purecounter-duration="1" class="purecounter"></span>
                         <p>Estudiantes Inscritos</p>
                     </div>
                 </div>
 
                 <div class="col-lg-3 col-md-6">
                     <div class="stats-item text-center w-100 h-100">
-                        <span data-purecounter-start="0" data-purecounter-end="120" data-purecounter-duration="1" class="purecounter"></span>
+                        <span data-purecounter-start="0" data-purecounter-end="<?php echo $cantidadCursos ?>" data-purecounter-duration="1" class="purecounter"></span>
                         <p>Cursos Ofrecidos</p>
                     </div>
                 </div>
@@ -149,7 +149,7 @@
 
                 <div class="col-lg-3 col-md-6">
                     <div class="stats-item text-center w-100 h-100">
-                        <span data-purecounter-start="0" data-purecounter-end="50" data-purecounter-duration="1" class="purecounter"></span>
+                        <span data-purecounter-start="0" data-purecounter-end="<?php echo $cantidadDocentes ?>" data-purecounter-duration="1" class="purecounter"></span>
                         <p>Instructores Certificados</p>
                     </div>
                 </div>

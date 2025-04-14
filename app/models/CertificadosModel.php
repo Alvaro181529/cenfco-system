@@ -12,45 +12,72 @@ class CertificadosModel
             die("Error: Conexión a la base de datos no establecida.");
         }
     }
-
-    public function buscarCertificados($titulo = null)
+    public function obtenerCertificados($titulo = null, $pagina = 1, $resultadosPorPagina = 10)
     {
+        $offset = ($pagina - 1) * $resultadosPorPagina;
+
         $query = "SELECT * FROM certificados WHERE 1=1";
+
         if ($titulo) {
             $query .= " AND titulo LIKE ?";
         }
+
+        $query .= " LIMIT ? OFFSET ?";
+
         $stmt = $this->db->prepare($query);
+
         $params = [];
         $types = '';
+
         if ($titulo) {
             $params[] = "%$titulo%";
             $types .= 's';
         }
-        if ($params) {
-            $stmt->bind_param($types, ...$params);
-        }
+
+        $params[] = $resultadosPorPagina;
+        $params[] = $offset;
+        $types .= 'ii';
+        $stmt->bind_param($types, ...$params);
+
         if ($stmt->execute()) {
             $result = $stmt->get_result();
-            return $result->fetch_all(MYSQLI_ASSOC);
+            $certificados = $result->fetch_all(MYSQLI_ASSOC);
         } else {
             return "Error: " . $this->db->error;
         }
-    }
-    public function obtenerCertificados()
-    {
-        $query = "SELECT * FROM certificados";
-        $result = $this->db->query($query);  // Aquí ahora puedes usar $this->db
 
-        if ($result) {
-            $certificados = [];
-            while ($row = $result->fetch_assoc()) {
-                $certificados[] = $row;
-            }
-            return $certificados;
+        $queryTotal = "SELECT COUNT(*) AS total FROM certificados WHERE 1=1";
+        if ($titulo) {
+            $queryTotal .= " AND titulo LIKE ?";
+        }
+        
+        $stmtTotal = $this->db->prepare($queryTotal);
+        
+        // Si hay un título, bind_param
+        if ($titulo) {
+            $likeTitulo = "%$titulo%";
+            $stmtTotal->bind_param('s', $likeTitulo);
+        }
+        
+        if ($stmtTotal->execute()) {
+            $resultTotal = $stmtTotal->get_result();
+            $totalCertificados = $resultTotal->fetch_assoc()['total'];
         } else {
             return "Error: " . $this->db->error;
         }
+        
+        // Calcular el total de páginas
+        $totalPaginas = ceil($totalCertificados / $resultadosPorPagina);
+        
+        return [
+            'certificados' => $certificados,
+            'totalCertificados' => $totalCertificados,
+            'totalPaginas' => $totalPaginas,
+            'paginaActual' => $pagina
+        ];
     }
+
+
     public function obtenerCertificadoPorId($id)
     {
         if (empty($id)) {
@@ -68,7 +95,7 @@ class CertificadosModel
             $certificado = $result->fetch_assoc();
 
             if ($certificado) {
-                return $certificado; // Retornar los detalles del certificado
+                return $certificado;
             } else {
                 return "Certificado no encontrado.";
             }
@@ -79,9 +106,8 @@ class CertificadosModel
 
     public function agregarCertificado($titulo, $precioIndividual, $precioCurso, $descripcion, $fecha = null)
     {
-        error_log("esto es nuevo certificado");
         if (empty($fecha)) {
-            $fecha = date('Y-m-d'); // Esto devuelve la fecha actual en formato '2025-03-06' (por ejemplo)
+            $fecha = date('Y-m-d');
         }
         $query = "INSERT INTO certificados (titulo, precioIndividual, precioCurso, descripcion, fechaEmision) VALUES (?, ?, ?, ?,?)";
 

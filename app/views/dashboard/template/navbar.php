@@ -30,20 +30,12 @@
                         </ul>
                     </li>
                 <?php } ?>
-                <!-- <li class="dropdown"><a href="#"><span>Reportes</span> <i
-                class="bi bi-chevron-down dropdown-indicator"></i></a>
-                <ul>
-                    <li><a href="/dashboard/reporte/cursos">Cursos</a></li>
-                    <li><a href="/dashboard/reporte/certificados">Certificados</a></li>
-                    <li><a href="/dashboard/reporte/docentes">Docentes</a></li>
-                </ul>
-            </li> -->
                 <?php if (in_array($_SESSION['user']['role'], ['Administrador', 'Vendedor'])) { ?>
                     <li class="dropdown"><a href="#"><span>Recursos</span> <i
                                 class="bi bi-chevron-down dropdown-indicator"></i></a>
                         <ul>
                             <li><a href="/dashboard/inventario">Inventario</a></li>
-                            <li><a href="/dashboard/eventos">Comentarios</a></li>
+                            <li><a href="/dashboard/comentarios">Comentarios</a></li>
                             <li><a href="/dashboard/preguntas">Preguntas Frecuentes</a></li>
                             <li><a href="/dashboard/blog">Blogs Educativos</a></li>
                         </ul>
@@ -53,9 +45,8 @@
                     <li><a href="/dashboard/reportes">Reportes</a></li>
                 <?php } ?>
             </ul>
-            <a class="btn-book-a-table" href="/logout">Cerrar Sesión</a>
         </nav>
-
+        <a class="btn-book-a-table" href="/logout">Cerrar Sesión</a>
 
         <a type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
             <i class="mobile-nav-toggle mobile-nav-show bi bi-list"></i>

@@ -1,13 +1,13 @@
 <?php require 'template/head.php' ?>
 <?php require 'template/navbar.php' ?>
-<main id="hero" class="container">
-    <div class="row gap-4">
-        <div class="card mb-3 col" style="max-width: 540px;">
+<main id="hero" class="container" data-aos="fade-up">
+    <div class="row">
+        <div class="card mb-3 col-12 col-sm-6 col-md-4 col-lg-3" style="max-width: 540px;">
             <div class="row g-0">
-                <div class="col-md-4">
+                <div class="col-4">
                     <img src="/assets/cenefco_grande.png" class="img-fluid rounded-start" alt="...">
                 </div>
-                <div class="col-md-8">
+                <div class="col-8">
                     <a href="/dashboard/docentes">
                         <div class="card-body">
                             <h5 class="card-title">Docentes</h5>
@@ -17,12 +17,12 @@
                 </div>
             </div>
         </div>
-        <div class="card mb-3 col" style="max-width: 540px;">
+        <div class="card mb-3 col-12 col-sm-6 col-md-4 col-lg-3" style="max-width: 540px;">
             <div class="row g-0">
-                <div class="col-md-4">
+                <div class="col-4">
                     <img src="/assets/cenefco_grande.png" class="img-fluid rounded-start" alt="...">
                 </div>
-                <div class="col-md-8">
+                <div class="col-8">
                     <a href="/dashboard/estudiantes">
                         <div class="card-body">
                             <h5 class="card-title">Estudiantes</h5>
@@ -32,12 +32,12 @@
                 </div>
             </div>
         </div>
-        <div class="card mb-3 col" style="max-width: 540px;">
+        <div class="card mb-3 col-12 col-sm-6 col-md-4 col-lg-3" style="max-width: 540px;">
             <div class="row g-0">
-                <div class="col-md-4">
+                <div class="col-4">
                     <img src="/assets/cenefco_grande.png" class="img-fluid rounded-start" alt="...">
                 </div>
-                <div class="col-md-8">
+                <div class="col-8">
                     <a href="/dashboard/cursos">
                         <div class="card-body">
                             <h5 class="card-title">Cursos</h5>
@@ -47,12 +47,12 @@
                 </div>
             </div>
         </div>
-        <div class="card mb-3 col" style="max-width: 540px;">
+        <div class="card mb-3 col-12 col-sm-6 col-md-4 col-lg-3" style="max-width: 540px;">
             <div class="row g-0">
-                <div class="col-md-4">
+                <div class="col-4">
                     <img src="/assets/cenefco_grande.png" class="img-fluid rounded-start" alt="...">
                 </div>
-                <div class="col-md-8">
+                <div class="col-8">
                     <a href="/dashboard/inventario">
                         <div class="card-body">
                             <h5 class="card-title">Inventario</h5>
@@ -63,6 +63,7 @@
             </div>
         </div>
     </div>
+
     <!-- Nueva sección para la gráfica -->
     <div class="row">
         <div class="col">

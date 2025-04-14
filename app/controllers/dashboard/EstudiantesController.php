@@ -14,15 +14,14 @@ class EstudiantesController
         $nombre = isset($_GET['nombre']) ? $_GET['nombre'] : null;
         $apellido = isset($_GET['apellido']) ? $_GET['apellido'] : null;
         $carnet = isset($_GET['carnet']) ? $_GET['carnet'] : null;
+        $pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+        $resultadosPorPagina = isset($_GET['resultadosPorPagina']) ? (int)$_GET['resultadosPorPagina'] : 10;
+        
         $estudiantesModel = new EstudiantesModel();
-        if(empty($nombre)&&empty($apellido)&&empty($carnet)){
-            $estudiantes = $estudiantesModel->obtenerEstudiantes();
-            return require __DIR__ . '/../../views/dashboard/estudiantes.php';
-        }
-        $estudiantes = $estudiantesModel->buscarEstudiantes($nombre, $apellido, $carnet);    
+        $estudiantes = $estudiantesModel->obtenerEstudiantes($nombre, $apellido, $carnet, $pagina, $resultadosPorPagina);
         return require __DIR__ . '/../../views/dashboard/estudiantes.php';
     }
-    
+
     public function Guardado()
     {
         $nombre = $_POST['nombre'] ?? '';

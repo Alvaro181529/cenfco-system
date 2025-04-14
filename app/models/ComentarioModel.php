@@ -13,10 +13,16 @@ class ComentariosModel
         }
     }
 
-    // Método para buscar comentarios por asunto o por nombre
-    public function buscarComentarios($asunto = null, $nombre = null)
+    // Método para buscar comentarios por asunto o nombre, con paginación
+    public function obtenerComentarios($asunto = null, $nombre = null, $pagina = 1, $resultadosPorPagina = 10)
     {
+        // Calculamos el OFFSET basado en la página actual
+        $offset = ($pagina - 1) * $resultadosPorPagina;
+
+        // Consulta base
         $query = "SELECT * FROM comentario WHERE 1=1";
+
+        // Agregar filtros si existen
         if ($asunto) {
             $query .= " AND asunto LIKE ?";
         }
@@ -24,10 +30,16 @@ class ComentariosModel
             $query .= " AND nombre LIKE ?";
         }
 
+        // Agregar los parámetros para LIMIT y OFFSET
+        $query .= " LIMIT ? OFFSET ?";
+
+        // Preparar la consulta
         $stmt = $this->db->prepare($query);
+
         $params = [];
         $types = '';
 
+        // Si hay filtros, agregamos los parámetros
         if ($asunto) {
             $params[] = "%$asunto%";
             $types .= 's';
@@ -38,33 +50,59 @@ class ComentariosModel
             $types .= 's';
         }
 
-        if ($params) {
-            $stmt->bind_param($types, ...$params);
-        }
+        // Agregar los parámetros de LIMIT y OFFSET
+        $params[] = $resultadosPorPagina;
+        $params[] = $offset;
+        $types .= 'ii'; // ii -> Integer para LIMIT y OFFSET
 
+        // Vinculamos los parámetros
+        $stmt->bind_param($types, ...$params);
+
+        // Ejecutar la consulta
         if ($stmt->execute()) {
             $result = $stmt->get_result();
-            return $result->fetch_all(MYSQLI_ASSOC);
+            $comentarios = $result->fetch_all(MYSQLI_ASSOC);
         } else {
             return "Error: " . $this->db->error;
         }
-    }
 
-    // Método para obtener todos los comentarios
-    public function obtenerComentarios()
-    {
-        $query = "SELECT * FROM comentario";
-        $result = $this->db->query($query);
+        // Obtener el número total de comentarios (sin filtros)
+        $queryTotal = "SELECT COUNT(*) AS total FROM comentario WHERE 1=1";
+        if ($asunto) {
+            $queryTotal .= " AND asunto LIKE ?";
+        }
+        if ($nombre) {
+            $queryTotal .= " AND nombre LIKE ?";
+        }
 
-        if ($result) {
-            $comentarios = [];
-            while ($row = $result->fetch_assoc()) {
-                $comentarios[] = $row;
-            }
-            return $comentarios;
+        // Preparar la consulta para obtener el total de comentarios
+        $stmtTotal = $this->db->prepare($queryTotal);
+        if ($asunto) {
+            $asuntoTotal = "%$asunto%";
+            $stmtTotal->bind_param('s', $asuntoTotal);
+        }
+        if ($nombre) {
+            $nombreTotal = "%$nombre%";
+            $stmtTotal->bind_param('s', $nombreTotal);
+        }
+
+        if ($stmtTotal->execute()) {
+            $resultTotal = $stmtTotal->get_result();
+            $totalComentarios = $resultTotal->fetch_assoc()['total'];
         } else {
             return "Error: " . $this->db->error;
         }
+
+        // Calcular el número total de páginas
+        $totalPaginas = ceil($totalComentarios / $resultadosPorPagina);
+
+        // Retornar los resultados y la información de paginación
+        return [
+            'comentarios' => $comentarios,
+            'totalComentarios' => $totalComentarios,
+            'totalPaginas' => $totalPaginas,
+            'paginaActual' => $pagina
+        ];
     }
 
     // Método para obtener un comentario por ID

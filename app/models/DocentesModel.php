@@ -14,9 +14,26 @@ class DocentesModel
             die("Error: Conexión a la base de datos no establecida.");
         }
     }
-    public function buscarDocentes($query)
+    public function obtenerDocentes($query = null, $pagina = 1, $resultadosPorPagina = 10)
     {
-        $sql = "SELECT * FROM docentes WHERE nombres LIKE ? OR apellidos LIKE ? OR correo LIKE ?";
+        // Validación de parámetros para la paginación
+        if (!is_int($pagina) || $pagina <= 0) {
+            return "Error: El parámetro 'pagina' debe ser un número entero mayor que 0.";
+        }
+
+        if (!is_int($resultadosPorPagina) || $resultadosPorPagina <= 0) {
+            return "Error: El parámetro 'resultadosPorPagina' debe ser un número entero mayor que 0.";
+        }
+
+        // Calculamos el offset para la paginación
+        $offset = ($pagina - 1) * $resultadosPorPagina;
+
+        // Consulta base de búsqueda con filtros (si hay query) o todos los docentes
+        $sql = "SELECT * FROM docentes";
+        if ($query) {
+            $sql .= " WHERE nombres LIKE ? OR apellidos LIKE ? OR correo LIKE ?";
+        }
+        $sql .= " LIMIT ? OFFSET ?";
 
         // Prepara la consulta
         $stmt = $this->db->prepare($sql);
@@ -24,43 +41,60 @@ class DocentesModel
             die('Error en la preparación de la consulta: ' . $this->db->error);
         }
 
-        // Preparamos el parámetro para la consulta
-        $queryParam = '%' . $query . '%'; // Para permitir la búsqueda parcial
+        // Enlazamos los parámetros
+        if ($query) {
+            $queryParam = '%' . $query . '%'; // Para permitir la búsqueda parcial
+            $stmt->bind_param('sssii', $queryParam, $queryParam, $queryParam, $resultadosPorPagina, $offset);
+        } else {
+            // Si no hay búsqueda, solo aplicamos paginación
+            $stmt->bind_param('ii', $resultadosPorPagina, $offset);
+        }
 
-        // Enlaza los parámetros
-        $stmt->bind_param('sss', $queryParam, $queryParam, $queryParam);
-
-        // Ejecuta la consulta
+        // Ejecutamos la consulta
         $stmt->execute();
 
-        // Obtiene los resultados
+        // Obtener los resultados
         $result = $stmt->get_result();
 
-        // Procesa los resultados
+        // Procesar los resultados
         $docentes = [];
         while ($docente = $result->fetch_assoc()) {
             $docentes[] = $docente;
         }
 
-        // Cierra el statement y devuelve los resultados
+        // Cerrar el statement
         $stmt->close();
-        return $docentes;
-    }
 
-    public function obtenerDocentes()
-    {
-        $query = "SELECT * FROM docentes";
-        $result = $this->db->query($query);  // Aquí ahora puedes usar $this->db
-
-        if ($result) {
-            $docentes = [];
-            while ($row = $result->fetch_assoc()) {
-                $docentes[] = $row;
-            }
-            return $docentes;
+        // Obtener el número total de docentes para la paginación (si hay búsqueda o no)
+        if ($query) {
+            $sqlTotal = "SELECT COUNT(*) AS total FROM docentes WHERE nombres LIKE ? OR apellidos LIKE ? OR correo LIKE ?";
+            $stmtTotal = $this->db->prepare($sqlTotal);
+            $stmtTotal->bind_param('sss', $queryParam, $queryParam, $queryParam);
         } else {
-            return "Error: " . $this->db->error;
+            $sqlTotal = "SELECT COUNT(*) AS total FROM docentes";
+            $stmtTotal = $this->db->prepare($sqlTotal);
         }
+
+        // Ejecutar la consulta total
+        $stmtTotal->execute();
+        $resultTotal = $stmtTotal->get_result();
+
+        if ($resultTotal) {
+            $totalDocentes = $resultTotal->fetch_assoc()['total'];
+        } else {
+            return "Error al obtener el total de docentes: " . $this->db->error;
+        }
+
+        // Calcular el número total de páginas
+        $totalPaginas = ceil($totalDocentes / $resultadosPorPagina);
+
+        // Devolver los resultados con la paginación
+        return [
+            'docentes' => $docentes,
+            'totalDocentes' => $totalDocentes,
+            'totalPaginas' => $totalPaginas,
+            'paginaActual' => $pagina
+        ];
     }
 
     public function obtenerDocentePorId($id)
