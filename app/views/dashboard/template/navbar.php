@@ -37,7 +37,7 @@
                             <li><a href="/dashboard/inventario">Inventario</a></li>
                             <li><a href="/dashboard/comentarios">Comentarios</a></li>
                             <li><a href="/dashboard/preguntas">Preguntas Frecuentes</a></li>
-                            <li><a href="/dashboard/blog">Blogs Educativos</a></li>
+                            <li><a href="/dashboard/blog">Creacion de blogs</a></li>
                         </ul>
                     </li>
                 <?php } ?>

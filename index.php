@@ -174,10 +174,13 @@ $router->map('DELETE', '/dashboard/pages/eliminar', [$PagesController, 'eliminar
 
 //Blog -> posts
 // $router->map('GET', '/dashboard/blog', [$PostsController, 'posts']);
+$router->map('GET', '/blog/[a:title]', [$PostsController, 'obtenerBlog']);
+$router->map('GET', '/dashboard/blog/[a:title]', [$PostsController, 'obtenerBlogDashboard']);
 $router->map('GET', '/dashboard/posts/[i:id]', [$PostsController, 'obtenerPost']);
 $router->map('POST', '/dashboard/posts', [$PostsController, 'guardar']);
 $router->map('POST', '/dashboard/posts/actualizar', [$PostsController, 'actualizar']);
 $router->map('DELETE', '/dashboard/posts/eliminar', [$PostsController, 'eliminar']);
+
 
 $match = $router->match();
 

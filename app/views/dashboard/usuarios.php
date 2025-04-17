@@ -98,7 +98,7 @@
             </div>
             <div class="mb-3">
                 <label for="rol" class="form-label">Roles</label>
-                <select class="form-control" id="rol" name="rol">
+                <select class="form-select" id="rol" name="rol">
                     <option value="Administrador">Administrador</option>
                     <option value="Vendedor">Vendedor</option>
                     <option value="Contador">Contador</option>

@@ -32,7 +32,7 @@ class MenusModel
     {
         $query = "SELECT COUNT(*) AS cantidad FROM menus";
         $result = $this->db->query($query);
-    
+
         if ($result) {
             $row = $result->fetch_assoc();
             return $row['cantidad']; // Devuelve el número total de menús
@@ -40,7 +40,7 @@ class MenusModel
             return "Error: " . $this->db->error;
         }
     }
-    
+
 
     public function obtenerMenuPorId($id)
     {

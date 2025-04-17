@@ -25,11 +25,10 @@ class PaginasController
 
     public function guardar()
     {
-        $MenuId = $_POST['MenuId'] ?? '';
-        $SortNumber = $_POST['SortNumber'] ?? '';
-
+        $MenuId = $_POST['menu'] ?? '';
+        $SortNumber = $_POST['ordenPage'] ?? '';
         if (empty($MenuId)) {
-            echo "El ID del menú es obligatorio.";
+            echo "El ID del page es obligatorio.";
             return;
         }
 
@@ -71,9 +70,9 @@ class PaginasController
 
     public function actualizar()
     {
-        $id = $_POST['id'] ?? '';
-        $MenuId = $_POST['MenuId'] ?? '';
-        $SortNumber = $_POST['SortNumber'] ?? '';
+        $id = $_POST['id_page'] ?? '';
+        $MenuId = $_POST['menu'] ?? '';
+        $SortNumber = $_POST['ordenPage'] ?? '';
 
         if (empty($id)) {
             echo "El ID de la página es obligatorio.";

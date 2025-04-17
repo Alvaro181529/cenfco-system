@@ -108,9 +108,9 @@
             </div>
             <div class="mb-3 col">
                 <label for="titulo" class="form-label">Docente</label>
-                <input type="text" list="listaDocente" class="form-control" id="docente" name="docente" placeholder="Docente">
+                <input type="text" list="listaDocente" class="form-select" id="docente" name="docente" placeholder="Docente">
                 <datalist id="listaDocente">
-                    <?php foreach ($docentes as $docente): ?>
+                    <?php foreach ($docentes['docentes'] as $docente): ?>
                         <option value="<?php echo $docente['nombres']; ?> <?php echo $docente['apellidos']; ?>"><?php echo $docente['nombres']; ?> <?php echo $docente['apellidos']; ?></option>
                     <?php endforeach; ?>
                 </datalist>

@@ -11,6 +11,7 @@ class PostsModel
         if (!$this->db) {
             die("Error: Conexión a la base de datos no establecida.");
         }
+        // $this->db->query("SET SESSION max_allowed_packet = 256*1024*1024"); 
     }
 
     public function obtenerPosts()
@@ -66,13 +67,37 @@ class PostsModel
             return "Error: " . $this->db->error;
         }
     }
-
-    public function agregarPost($PageId, $Title, $Content, $Datetime, $User, $ContentBinary)
+    public function obtenerPostPorTitle($id)
     {
-        $query = "INSERT INTO posts (PageId, Title, Content, Datetime, User, ContentBinary) VALUES (?, ?, ?, ?, ?, ?)";
+        if (empty($id)) {
+            return "El ID del post es obligatorio.";
+        }
+
+        $query = "SELECT * FROM posts WHERE urlShort = ?";
 
         $stmt = $this->db->prepare($query);
-        $stmt->bind_param("isssss", $PageId, $Title, $Content, $Datetime, $User, $ContentBinary);
+        $stmt->bind_param("s", $id);
+
+        if ($stmt->execute()) {
+            $result = $stmt->get_result();
+            $post = $result->fetch_assoc();
+
+            if ($post) {
+                return $post;
+            } else {
+                return "Post no encontrado.";
+            }
+        } else {
+            return "Error: " . $this->db->error;
+        }
+    }
+
+    public function agregarPost($PageId, $Title, $Content, $Datetime, $User, $ContentBinary = NULL, $urlShort)
+    {
+        $query = "INSERT INTO posts (PageId, Title, Content, Datetime, User, ContentBinary, urlShort) VALUES (?, ?, ?, ?, ?, ?,?)";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param("issssss", $PageId, $Title, $Content, $Datetime, $User, $ContentBinary, $urlShort);
 
         if ($stmt->execute()) {
             return "Nuevo post agregado exitosamente";
@@ -81,16 +106,16 @@ class PostsModel
         }
     }
 
-    public function actualizarPost($id, $PageId, $Title, $Content, $Datetime, $User, $ContentBinary)
+    public function actualizarPost($id, $PageId, $Title, $Content, $Datetime, $User, $ContentBinary, $urlShort)
     {
         if (empty($id)) {
             return "El ID del post es obligatorio.";
         }
 
-        $query = "UPDATE posts SET PageId = ?, Title = ?, Content = ?, Datetime = ?, User = ?, ContentBinary = ? WHERE PostId = ?";
+        $query = "UPDATE posts SET PageId = ?, Title = ?, Content = ?, Datetime = ?, User = ?, ContentBinary = ? , urlShort = ? WHERE PostId = ?";
 
         $stmt = $this->db->prepare($query);
-        $stmt->bind_param("isssssi", $PageId, $Title, $Content, $Datetime, $User, $ContentBinary, $id);
+        $stmt->bind_param("issssssi", $PageId, $Title, $Content, $Datetime, $User, $ContentBinary, $urlShort, $id);
 
         if ($stmt->execute()) {
             return "Post actualizado exitosamente";

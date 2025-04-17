@@ -25,6 +25,30 @@ class HomeModel
             return "Error: " . $this->db->error;
         }
     }
+    public function obtenerMenu()
+    {
+        $query = "SELECT 
+                        m.MenuNameEnglish, 
+                        p.Title,
+                        p.urlShort
+                    FROM 
+                        menus m
+                    JOIN 
+                        pages pg ON m.MenuId = pg.MenuId
+                    JOIN 
+                        posts p ON pg.PageId = p.PageId;";
+        $result = $this->db->query($query);
+
+        if ($result) {
+            $menus = [];
+            while ($row = $result->fetch_assoc()) {
+                $menus[] = $row;
+            }
+            return $menus;
+        } else {
+            return "Error: " . $this->db->error;
+        }
+    }
     public function obtenerCursos()
     {
         $query = "SELECT * FROM cursos WHERE mostrarInicio = '1'";

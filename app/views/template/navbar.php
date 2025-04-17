@@ -14,22 +14,31 @@
                 <li><a href="#chefs">Instructores</a></li>
                 <li><a href="#gallery">Galería</a></li>
                 <li><a href="#contact">Contacto</a></li>
-                <li class="dropdown"><a href="#"><span>Recursos</span> <i
+                <li class="dropdown"><a href="#"><span>Blog</span> <i
                             class="bi bi-chevron-down dropdown-indicator"></i></a>
                     <ul>
-                        <li><a href="#">Material de Estudio</a></li>
-                        <li class="dropdown"><a href="#"><span>Foros</span> <i
-                                    class="bi bi-chevron-down dropdown-indicator"></i></a>
-                            <ul>
-                                <li><a href="#">Foro de Discusión 1</a></li>
-                                <li><a href="#">Foro de Discusión 2</a></li>
-                                <li><a href="#">Foro de Discusión 3</a></li>
-                                <li><a href="#">Foro de Discusión 4</a></li>
-                                <li><a href="#">Foro de Discusión 5</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="#">Preguntas Frecuentes</a></li>
-                        <li><a href="#">Blogs Educativos</a></li>
+                        <?php
+
+                        if (isset($groupedMenus) && !empty($groupedMenus)) {
+                            foreach ($groupedMenus as $menuName => $titles) { ?>
+                                <li class="dropdown"><a href="#"><span><?php echo ($menuName) ?></span> <i
+                                            class="bi bi-chevron-down dropdown-indicator"></i></a>
+                                    <ul>
+                                        <?php foreach ($titles as $title) { ?>
+                                            <li>
+                                                <a style="word-wrap: break-word;" href="/blog/<?php echo htmlspecialchars($title['urlShort']); ?>">
+                                                    <?php echo htmlspecialchars($title['Title']); ?>
+                                                </a>
+                                            </li>
+                                        <?php } ?>
+                                    </ul>
+                                </li>
+
+                            <?php    }
+                        } else { ?>
+                            <li> <a href="">No hay menús disponibles</a></li>
+                        <?php   } ?>
+
                     </ul>
                 </li>
             </ul>

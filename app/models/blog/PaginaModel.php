@@ -15,7 +15,17 @@ class PaginasModel
 
     public function obtenerPages()
     {
-        $query = "SELECT * FROM pages";
+        $query = "SELECT 
+                        p.*, 
+                        o.Title, 
+                        m.MenuNameEnglish
+                    FROM 
+                        pages AS p
+                    LEFT JOIN 
+                        posts AS o ON p.PageId = o.PageId
+                    INNER JOIN 
+                        menus AS m ON p.MenuId = m.MenuId;
+";
         $result = $this->db->query($query);
 
         if ($result) {

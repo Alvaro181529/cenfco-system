@@ -258,13 +258,8 @@ class ReportesController
 
         if (empty($fechaFin) && empty($fechaInicio) && empty($tipo) && empty($user)) {
             $total = $ventasModel->obtenerTotalVentas($user, $tipo);
-            error_log($user);
-            error_log($tipo);
             $reportes = $this->reportesModel->obtenerReportesVenta();
         } else {
-            error_log("jsdksam");
-            error_log($user);
-            error_log($tipo);
             $total = $ventasModel->obtenerTotalVentas($user, $tipo);
             $reportes = $this->reportesModel->ventasReportes($fechaInicio, $fechaFin, $tipo, $user);
         }

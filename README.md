@@ -1,7 +1,10 @@
 # Sistema de Gestión de Estudiantes, Docentes y Cursos - CENEFCO
 
 Este proyecto es un sistema desarrollado en PHP y MySQL para la gestión de estudiantes, docentes y cursos en la institución CENEFCO. El sistema permite registrar, actualizar y consultar información relevante de estudiantes, docentes y cursos, facilitando así la administración interna de la institución.
-
+## Blog
+Para que no ocurra errores al añadir imagenes en el blog se recomienda que sea de baja resolucion o dimencion pequeña y añadir en el archivo en linux /etc/my.cnf
+[mysqld]
+max_allowed_packet = 64M  
 ## Características
 
 - Registro de estudiantes, docentes y cursos.

@@ -13,6 +13,9 @@
     <!-- Favicons -->
     <link href="/assets/Diseño_sin_título_13.png" rel="icon">
     <link href="/assets/Diseño_sin_título_13.png" rel="apple-touch-icon">
+    <!-- Quilljs -->
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

@@ -25,9 +25,8 @@ class MenusController
 
     public function guardar()
     {
-        $MenuNameEnglish = $_POST['MenuNameEnglish'] ?? '';
-        $SortNumber = $_POST['SortNumber'] ?? '';
-
+        $MenuNameEnglish = $_POST['titulo'] ?? '';
+        $SortNumber = $_POST['orden'] ?? '';
         if (empty($MenuNameEnglish)) {
             echo "El nombre del menú es obligatorio.";
             return;
@@ -72,8 +71,8 @@ class MenusController
     public function actualizar()
     {
         $id = $_POST['id'] ?? '';
-        $MenuNameEnglish = $_POST['MenuNameEnglish'] ?? '';
-        $SortNumber = $_POST['SortNumber'] ?? '';
+        $MenuNameEnglish = $_POST['titulo'] ?? '';
+        $SortNumber = $_POST['orden'] ?? '';
 
         if (empty($id)) {
             echo "El ID del menú es obligatorio.";

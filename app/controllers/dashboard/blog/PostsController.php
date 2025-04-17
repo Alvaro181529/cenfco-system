@@ -25,19 +25,19 @@ class PostsController
 
     public function guardar()
     {
-        $PageId = $_POST['PageId'] ?? '';
-        $Title = $_POST['Title'] ?? '';
-        $Content = $_POST['Content'] ?? '';
-        $Datetime = $_POST['Datetime'] ?? '';
-        $User = $_POST['User'] ?? '';
-        $ContentBinary = $_POST['ContentBinary'] ?? '';
-
+        $PageId = $_POST['id_page_blog'] ?? '';
+        $Title = $_POST['title_blog'] ?? '';
+        $Content = $_POST['content'] ?? '';
+        $urlShort = $_POST['urlShort'] ?? '';
+        $Datetime = new DateTime();
+        $DatetimeString = $Datetime->format('Y-m-d H:i:s');
+        $User = $_SESSION['user']['username'] ?? '';
         if (empty($PageId)) {
             echo "El ID de la página es obligatorio.";
             return;
         }
 
-        $result = $this->postsModel->agregarPost($PageId, $Title, $Content, $Datetime, $User, $ContentBinary);
+        $result = $this->postsModel->agregarPost($PageId, $Title, $Content, $DatetimeString, $User, NULL, $urlShort);
 
         if ($result == "Nuevo post agregado exitosamente") {
             header("Location: /dashboard/blog");
@@ -72,17 +72,85 @@ class PostsController
         $post = $this->postsModel->obtenerPostPorId($id);
         echo json_encode($post);
     }
+    public function obtenerBlog($title)
+    {
+        if (isset($_SESSION['user_id'])) {
+            $success = "iniciado";
+        } else {
+            $success = "";
+        }
 
+        $homeModel = new HomeModel();
+        $homeController = new HomeController();
+        $menus = $homeModel->obtenerMenu();
+        $groupedMenus = [];
+        foreach ($menus as $menu) {
+
+            if (!isset($groupedMenus[$menu['MenuNameEnglish']])) {
+                $groupedMenus[$menu['MenuNameEnglish']] = [];
+            }
+            $groupedMenus[$menu['MenuNameEnglish']][] = [
+                'Title' => $homeController->limit_words($menu['Title']),
+                'urlShort' => $menu['urlShort']
+            ];
+        }
+
+        $cursos = $homeModel->obtenerCursos();
+        $categorias = $homeModel->obtenerCategorias();
+        $cursosPorCategoria = [];
+        foreach ($categorias as $categoria) {
+            $cursosPorCategoria[$categoria['categoria']] = array_filter($cursos, function ($curso) use ($categoria) {
+                return $curso['categoria'] === $categoria['categoria'];
+            });
+        }
+        $post = $this->postsModel->obtenerPostPorTitle($title);
+        require __DIR__ . '/../../../views/blog.php';
+    }
+    public function obtenerBlogDashboard($title)
+    {
+        if (isset($_SESSION['user_id'])) {
+            $success = "iniciado";
+        } else {
+            $success = "";
+        }
+
+        $homeModel = new HomeModel();
+        $homeController = new HomeController();
+        $menus = $homeModel->obtenerMenu();
+        $groupedMenus = [];
+        foreach ($menus as $menu) {
+
+            if (!isset($groupedMenus[$menu['MenuNameEnglish']])) {
+                $groupedMenus[$menu['MenuNameEnglish']] = [];
+            }
+            $groupedMenus[$menu['MenuNameEnglish']][] = [
+                'Title' => $homeController->limit_words($menu['Title']),
+                'urlShort' => $menu['urlShort']
+            ];
+        }
+
+        $cursos = $homeModel->obtenerCursos();
+        $categorias = $homeModel->obtenerCategorias();
+        $cursosPorCategoria = [];
+        foreach ($categorias as $categoria) {
+            $cursosPorCategoria[$categoria['categoria']] = array_filter($cursos, function ($curso) use ($categoria) {
+                return $curso['categoria'] === $categoria['categoria'];
+            });
+        }
+        $post = $this->postsModel->obtenerPostPorTitle($title);
+        require __DIR__ . '/../../../views/dashboard/blogPage.php';
+    }
     public function actualizar()
     {
-        $id = $_POST['id'] ?? '';
-        $PageId = $_POST['PageId'] ?? '';
-        $Title = $_POST['Title'] ?? '';
-        $Content = $_POST['Content'] ?? '';
-        $Datetime = $_POST['Datetime'] ?? '';
-        $User = $_POST['User'] ?? '';
+        $id = $_POST['id_blog'] ?? '';
+        $PageId = $_POST['id_page_blog'] ?? '';
+        $Title = $_POST['title_blog'] ?? '';
+        $Content = $_POST['content'] ?? '';
+        $urlShort = $_POST['urlShort'] ?? '';
+        $Datetime = new DateTime();
+        $DatetimeString = $Datetime->format('Y-m-d H:i:s');
+        $User = $_SESSION['user']['username'] ?? '';
         $ContentBinary = $_POST['ContentBinary'] ?? '';
-
         if (empty($id)) {
             echo "El ID del post es obligatorio.";
             return;
@@ -93,7 +161,7 @@ class PostsController
             return;
         }
 
-        $result = $this->postsModel->actualizarPost($id, $PageId, $Title, $Content, $Datetime, $User, $ContentBinary);
+        $result = $this->postsModel->actualizarPost($id, $PageId, $Title, $Content, $DatetimeString, $User, $ContentBinary, $urlShort);
 
         if ($result == "Post actualizado exitosamente") {
             header("Location: /dashboard/blog");
