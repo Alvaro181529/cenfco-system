@@ -39,13 +39,26 @@ class AuthController
             $passwordConfirmed = $_POST['passwordConfirmed'] ?? '';
             $role = $_POST['role'] ?? 'user';
 
+            $pattern = '/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/';
+
+            // Validaciones
+            $errors = [];
+
+            if (!preg_match($pattern, $password)) {
+                $errors[] = "La contraseña debe tener al menos 8 caracteres, incluir una letra, un número y un carácter especial.";
+            }
+
+            if ($password !== $passwordConfirmed) {
+                $errors[] = "Las contraseñas no coinciden.";
+            }
+            
             if ($password !== $passwordConfirmed) {
                 $error = "Las contraseñas no coinciden.";
             } elseif (empty($username) || empty($password) || empty($passwordConfirmed)) {
                 $error = "Por favor, ingrese ambos campos.";
             } else {
 
-                $authModel = new AuthModel();   
+                $authModel = new AuthModel();
                 $register = $authModel->registerUser($username, $password, $correo, $role);
                 if ($register) {
                     $success = "Usuario registrado con éxito!";
@@ -56,6 +69,13 @@ class AuthController
             }
         }
         require __DIR__ . '/../views/auth/register.php';
+    }
+    public function forwartPassword()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $username = $_POST['email'] ?? '';
+        }
+        require __DIR__ . '/../views/auth/forwart-password.php';
     }
     public function logout()
     {

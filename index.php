@@ -49,11 +49,13 @@ $router->map('POST', '/login', [$AuthController, 'login']);
 $router->map('GET', '/register', [$AuthController, 'register']);
 $router->map('POST', '/register', [$AuthController, 'register']);
 $router->map('GET', '/logout', [$AuthController, 'logout']);
+$router->map('GET', '/forwart-password', [$AuthController, 'forwartPassword']);
 
 
 //Home
 $router->map('GET', '/', [$homeController, 'index']);
-$router->map('GET', '/about', [$homeController, 'about']);
+$router->map('GET', '/index', [$homeController, 'prueba']);
+$router->map('GET', '/cursos', [$homeController, 'cursos']);
 $router->map('GET', '/user/[i:id]', [$homeController, 'user']);
 $router->map('POST', '/chatbot', [$chat, 'chat']);
 

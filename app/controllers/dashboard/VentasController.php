@@ -16,21 +16,21 @@ class VentasController
             header('Location: / ');
             exit();
         }
-        $pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
-        $resultadosPorPagina = isset($_GET['resultadosPorPagina']) ? (int)$_GET['resultadosPorPagina'] : 10;
+        $mes = isset($_GET['mes']) ? (int)$_GET['mes'] : date('m');
+        $anio = isset($_GET['anio']) ? (int)$_GET['anio'] : date('Y');
         $certificadosModel = new CertificadosModel();
         $estudiantesModel = new EstudiantesModel();
 
         $estudiantes = $estudiantesModel->obtenerEstudiantes();
         $certificados = $certificadosModel->obtenerCertificados();
         $username = $_SESSION['user']['username'];
-        
+
         if ($_SESSION['user']['role'] == "Administrador") {
-            $ventas = $this->ventasModel->obtenerVentas('', 'certificado', $pagina, $resultadosPorPagina);
-            $total = $this->ventasModel->obtenerTotalVentas('', 'certificado');
+            $ventas = $this->ventasModel->obtenerVentas('', 'certificado', $anio, $mes);
+            $total = $this->ventasModel->obtenerTotalVentas('', 'certificado', $anio, $mes);
         } else {
-            $total = $this->ventasModel->obtenerVentas($username, 'certificado', $pagina, $resultadosPorPagina);
-            $ventas = $this->ventasModel->obtenerTotalVentas($username, 'certificado');
+            $total = $this->ventasModel->obtenerVentas($username, 'certificado', $anio, $mes);
+            $ventas = $this->ventasModel->obtenerTotalVentas($username, 'certificado', $anio, $mes);
         }
         require __DIR__ . '/../../views/dashboard/ventasCertificados.php';
     }
@@ -42,16 +42,18 @@ class VentasController
             exit();
         }
         $username = $_SESSION['user']['username'];
+        $mes = isset($_GET['mes']) ? (int)$_GET['mes'] : date('m');
+        $anio = isset($_GET['anio']) ? (int)$_GET['anio'] : date('Y');
         $cursosModel = new CursosModel();
         $estudiantesModel = new EstudiantesModel();
         $estudiantes = $estudiantesModel->obtenerEstudiantes();
         $cursos = $cursosModel->obtenerCursos();
         if ($_SESSION['user']['role'] == "Administrador") {
-            $ventas = $this->ventasModel->obtenerVentas('', 'curso');
-            $total = $this->ventasModel->obtenerTotalVentas('', 'curso');
+            $ventas = $this->ventasModel->obtenerVentas('', 'curso', $anio, $mes);
+            $total = $this->ventasModel->obtenerTotalVentas('', 'curso' ,$anio, $mes);
         } else {
-            $ventas = $this->ventasModel->obtenerVentas($username, 'curso');
-            $total = $this->ventasModel->obtenerTotalVentas($username, 'curso');
+            $ventas = $this->ventasModel->obtenerVentas($username, 'curso', $anio, $mes);
+            $total = $this->ventasModel->obtenerTotalVentas($username, 'curso', $anio, $mes);
         }
         require __DIR__ . '/../../views/dashboard/ventasCursos.php';
     }
@@ -71,22 +73,46 @@ class VentasController
         $precio = $_POST['precio'] ?? '';
         $descripcion = $_POST['descripcion'] ?? '';
         $tipo = $_POST['tipo'] ?? '';
+
         if (empty($precio) || empty($tipo)) {
             echo "Todos los campos son obligatorios.";
             return;
         }
-
-        $result = $this->ventasModel->agregarVentas($id_curso, $id_certificado, $id_estudiante, $externoNombre, $externoCarnet, $precio, $descripcion, $tipo, $username);
-
-        if ($result == "Venta agregada exitosamente") {
-            if ($tipo == "curso") {
-                header("Location: /dashboard/ventas/cursos");
-            } else {
-                header("Location: /dashboard/ventas/certificados");
+        if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] == 0) {
+            $valid_types = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+            if (!in_array($_FILES['imagen']['type'], $valid_types)) {
+                $error = "El archivo debe ser una imagen JPG, PNG o GIF.";
+                return;
             }
-            exit();
+            $upload_dir = 'storage/uploads/comprobante/';
+            if (!is_dir($upload_dir)) {
+                mkdir($upload_dir, 0777, true);
+            }
+            $extension = pathinfo(basename($_FILES['imagen']['name']), PATHINFO_EXTENSION);
+            $image_name = $tipo . '-' . $externoCarnet . uniqid() . '.' . $extension;
+            $image_path = $upload_dir . $image_name;
+
+
+            if (!move_uploaded_file($_FILES['imagen']['tmp_name'], $image_path)) {
+                $error = "Error al subir la imagen.";
+                return;
+            }
+            error_log($image_name);
+            $result = $this->ventasModel->agregarVentas($id_curso, $id_certificado, $id_estudiante, $externoNombre, $externoCarnet, $precio, $descripcion, $tipo, $username, $image_name);
+            error_log($result);
+            if ($result == "Venta agregada exitosamente") {
+                if ($tipo == "curso") {
+                    header("Location: /dashboard/ventas/cursos");
+                } else {
+                    header("Location: /dashboard/ventas/certificados");
+                }
+                exit();
+            } else {
+                echo $result;
+            }
         } else {
-            echo $result;
+            error_log('Aca no hay imagen');
+            $error = "Por favor, suba una imagen.";
         }
     }
     public function Eliminar()

@@ -46,6 +46,10 @@ class HomeController
         $cantidadInventario = $dashboardModel->cantidadInventario();
         $eventos = $this->homeModel->obtenerEventos();
 
+        require __DIR__ . '/../views/index.php';
+    }
+    function prueba()
+    {
         require __DIR__ . '/../views/home.php';
     }
 
@@ -58,9 +62,27 @@ class HomeController
         }
         return implode(' ', $words);
     }
-    public function about()
+    public function cursos()
     {
-        require __DIR__ . '/../views/about.php';
+        if (isset($_SESSION['user_id'])) {
+            $success = "iniciado";
+        } else {
+            $success = "";
+        }
+        $menus = $this->homeModel->obtenerMenu();
+        $groupedMenus = [];
+        foreach ($menus as $menu) {
+
+            if (!isset($groupedMenus[$menu['MenuNameEnglish']])) {
+                $groupedMenus[$menu['MenuNameEnglish']] = [];
+            }
+            $groupedMenus[$menu['MenuNameEnglish']][] = [
+                'Title' => $this->limit_words($menu['Title']),
+                'urlShort' => $menu['urlShort']
+            ];
+        }
+        $cursos = $this->homeModel->obtenerCursos();
+        require __DIR__ . '/../views/cursos.php';
     }
 
     public function user($id)

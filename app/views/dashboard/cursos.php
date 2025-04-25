@@ -133,7 +133,7 @@
             </div>
             <div class="mb-3 col">
                 <label for="precio" class="form-label">Precio</label>
-                <input type="number" min="0" class="form-control" id="precio" name="precio" placeholder="Precio">
+                <input type="number" min="0.00" step="0.01" class="form-control" id="precio" name="precio" placeholder="Precio">
             </div>
         </div>
         <div class="row">
@@ -171,7 +171,7 @@
                 <label class="form-label" for="certificadoPrecio">
                     Precio certificado individual
                 </label>
-                <input class="form-control" type="number" value="" id="certificadoPrecio" placeholder="Precio">
+                <input class="form-control" type="number" value="" min="0.00" step="0.01"  id="certificadoPrecio" placeholder="Precio">
             </div>
         </div>
 

@@ -7,13 +7,12 @@
 
         <nav id="navbar" class="navbar">
             <ul>
-                <li><a href="#hero">Inicio</a></li>
-                <li><a href="#about">Acerca de</a></li>
-                <li><a href="#menu">Cursos</a></li>
-                <li><a href="#events">Eventos</a></li>
-                <li><a href="#chefs">Instructores</a></li>
-                <li><a href="#gallery">Galería</a></li>
-                <li><a href="#contact">Contacto</a></li>
+                <li><a href="/#hero">Inicio</a></li>
+                <li><a href="/#about">Acerca de</a></li>
+                <li><a href="/#benefits">Beneficios</a></li>
+                <li><a href="/#events">Eventos</a></li>
+                <li><a href="/cursos">Cursos</a></li>
+                <li><a href="/#contact">Contacto</a></li>
                 <li class="dropdown"><a href="#"><span>Blog</span> <i
                             class="bi bi-chevron-down dropdown-indicator"></i></a>
                     <ul>

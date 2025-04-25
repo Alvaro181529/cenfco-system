@@ -3,7 +3,47 @@
 
 <main id="main" class="container" data-aos="fade-up">
     <h1><?php echo $total['0']['totalPrecio'] ?></h1>
-    <button id="ventaCertificado">Reporte</button>
+    <div class="row">
+        <div class="col">
+            <form action="/dashboard/ventas/certificados" method="GET" class="d-flex align-items-center">
+                <select name="mes" class="form-select me-2" id="mes">
+                    <?php
+                    // Obtener el mes actual
+                    $currentMonth = date("m");
+                    
+                    // Iterar sobre los meses del año
+                    for ($i = 1; $i <= 12; $i++) {
+                        // Obtener el nombre del mes
+                        $monthName = date("F", mktime(0, 0, 0, $i, 1));
+                        // Verificar si el mes está seleccionado
+                        $selected = (isset($_GET['mes']) && $_GET['mes'] == $i) || (!isset($_GET['mes']) && $i == $currentMonth) ? 'selected' : '';
+                        echo "<option value=\"$i\" $selected>" . ucfirst($monthName) . "</option>";
+                    }
+                    ?>
+                </select>
+                <select name="anio" class="form-select me-2" id="anio">
+                    <?php
+                    // Año actual
+                    $currentYear = date("Y");
+                    
+                    // Verificar si el año ya está seleccionado a través del parámetro GET
+                    $selectedYear = isset($_GET['anio']) ? $_GET['anio'] : $currentYear;
+                    
+                    // Iterar desde el año 2000 hasta el año actual
+                    for ($i = 2000; $i <= $currentYear; $i++) {
+                        // Verificar si el año está seleccionado
+                        $selected = ($i == $selectedYear) ? 'selected' : '';
+                        echo "<option value=\"$i\" $selected>$i</option>";
+                    }
+                    ?>
+                </select>
+                <div class="col-auto">
+                    <button class="btn btn-primary" type="submit">Buscar</button>
+                    <button type="button" id="ventaCertificado">Reporte</button>
+                </div>
+            </form>
+        </div>
+    </div>
     <div class="table-responsive">
         <table class="table table-striped">
             <thead class="text-center">
@@ -126,7 +166,6 @@
             </div>
         </div>
     </form>
-
 </dialog>
 <dialog id="agregarVenta">
     <form id="formVentas" method="post">
@@ -141,7 +180,7 @@
                 <input type="text" list="listCursos" class="form-control" id="curso" name="curso" placeholder="Título">
                 <datalist id="listCursos">
                     <?php foreach ($certificados['certificados'] as $certificado): ?>
-                        <option value="<?php echo $certificado['titulo']; ?>" data-id="<?php echo $certificado['id']; ?>" data-price="<?php echo $certificado['precio']; ?>"></option>
+                        <option value="<?php echo $certificado['titulo']; ?>" data-id="<?php echo $certificado['id']; ?>" data-price="<?php echo $certificado['precioIndividual']; ?>"></option>
                     <?php endforeach; ?>
                 </datalist>
             </div>
@@ -180,7 +219,49 @@
         <button type="button" id="cerrarVentaModal" class="btn btn-danger">Cerrar</button>
     </form>
 </dialog>
+<dialog id="vistaVenta">
 
+    <div class="d-flex justify-content-between align-items-center position-relative" style="z-index: 999;">
+        <h5 class="card-title mb-0"></h5>
+        <form action="" method="dialog">
+            <button type="submit" class="btn-close" id="vistaClose" aria-label="Close"></button>
+        </form>
+    </div>
+
+    <div class="card">
+        <div class="card-header text-center text-muted">
+            <h5 class="card-title mb-0" id="vistaNombreVista"></h5>
+            <div class="d-flex justify-content-center text-muted">
+                <i class="bi bi-envelope me-2"></i>
+                <span id="vistaCorreo"></span>
+            </div>
+            <a href="#" id="vistaCurriculum" target="_blank" class="badge text-bg-danger mt-3">
+                <i class="bi bi-file-earmark-text me-2"></i> Comprobante
+            </a>
+        </div>
+
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col">
+                    <h6><i class="bi bi-tag me-2"></i>Precio</h6>
+                    <p class="text-muted" id="vistaPrecio">Calle Principal 123, Piso 4B, Madrid, España</p>
+                </div>
+                <div class="col">
+                    <h6><i class="bi bi-tag me-2"></i>Mostrado en Inicio</h6>
+                    <p class="text-muted" id="vistaInicio">Calle Principal 123, Piso 4B, Madrid, España</p>
+                </div>
+            </div>
+            <div class="mb-3">
+                <h6><i class="bi bi-file-person me-2"></i> Vendedor</h6>
+                <p class="text-muted" id="vistaDocente">X-12345678-Z</p>
+            </div>
+            <div class="mb-3">
+                <h6><i class="bi bi-card-list me-2"></i> Descripcion</h6>
+                <p class="text-muted" id="vistaDescripcion">X-12345678-Z</p>
+            </div>
+        </div>
+    </div>
+</dialog>
 <script>
     $('#ventaCertificado').addEventListener('click', () => {
         $('#ModalVentaCertificados').showModal()
@@ -300,6 +381,32 @@
                     alert('Hubo un error al eliminar la venta');
                 });
         }
+    }
+
+    function verVenta(id) {
+        fetch('/dashboard/ventas/cursos/' + id)
+            .then(response => {
+
+                if (!response.ok) {
+                    throw new Error('Error al obtener el curso');
+                }
+                return response.json();
+            })
+            .then(curso => {
+                $('#id').textContent = curso.id;
+                $('#vistaCurriculum').href = '/storage/uploads/comprobante/' + curso.comprobante;
+                $('#vistaNombreVista').textContent = curso.externoNombre ? curso.externoNombre : 'No tiene titulo';
+                $('#vistaDocente').textContent = curso.user ? curso.user : 'No tiene docente';
+                $('#vistaDescripcion').textContent = curso.descripcion ? curso.descripcion : 'No tiene descripcion';
+                $('#vistaInicio').textContent = curso.cursoTitulo ? curso.cursoTitulo : 'No tiene descripcion';
+                $('#vistaCorreo').textContent = curso.externoCarnet ? curso.externoCarnet : 'No tiene descripcion';
+                $('#vistaPrecio').textContent = curso.precio ? curso.precio +
+                    ' Bs' : 'No tiene precio';
+                $('#vistaVenta').showModal()
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
     }
 </script>
 

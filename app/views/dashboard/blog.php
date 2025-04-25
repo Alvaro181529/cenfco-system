@@ -451,7 +451,6 @@
     });
 
     function editarPost(id) {
-        console.log(id)
         $('#formBlogs').setAttribute('action', '/dashboard/posts/actualizar');
         fetch('/dashboard/posts/' + id)
             .then(response => {
@@ -461,7 +460,6 @@
                 return response.json();
             })
             .then(post => {
-                console.log(post)
                 $('#id_blog').value = post.PostId;
                 $('#id_page_blog').value = post.PageId;
                 $('#title_blog').value = post.Title;

@@ -21,6 +21,10 @@
   --color-default: #212529;
   --color-primary: #c4971d;
   --color-secondary: #37373f;
+  --primary-color: #0a0a4a;
+  --secondary-color: #f8f9fa;
+  --accent-color: #c4971d;
+  --text-light: #ffffff;
 }
 
 /* Smooth scroll behavior */
@@ -313,7 +317,7 @@ section {
 .header .btn-book-a-table:hover,
 .header .btn-book-a-table:focus:hover {
   color: #fff;
-  background: rgba(206, 18, 18, 0.8);
+  background: rgba(132, 120, 38, 0.725);
 }
 
 section {
@@ -994,7 +998,7 @@ section {
 }
 
 .testimonials .testimonial-item .stars i {
-  color: #ffc107;
+  color: #c4971d;
   margin: 0 1px;
 }
 
@@ -1574,8 +1578,8 @@ section {
 }
 
 .hero .btn-book-a-table:hover {
-  background: rgba(206, 18, 18, 0.8);
-  box-shadow: 0 8px 28px rgba(206, 18, 18, 0.45);
+  background: rgba(132, 120, 38, 0.725);
+  box-shadow: 0 8px 28px rgba(132, 120, 38, 0.45);
 }
 
 .hero .btn-watch-video {
@@ -1599,7 +1603,7 @@ section {
 }
 
 .hero .btn-watch-video:hover i {
-  color: rgba(206, 18, 18, 0.8);
+  color: rgba(132, 120, 38, 0.725);
 }
 
 @media (max-width: 640px) {

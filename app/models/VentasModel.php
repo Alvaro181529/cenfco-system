@@ -6,53 +6,74 @@ class VentasModel
 
     public function __construct()
     {
-        // Cargar la conexión desde db.php
+
         $this->db = include(__DIR__ . '/../../config/db.php');
 
-        // Verificar si la conexión es válida
+
         if (!$this->db) {
             die("Error: Conexión a la base de datos no establecida.");
         }
     }
-
-    public function obtenerVentas($user = '', $tipo = '')
+    public function obtenerVentas($user = '', $tipo = '', $anio = NULL, $month = NULL)
     {
         // Prepara la consulta SQL
         $query = "SELECT 
-                    cursos.titulo AS cursoTitulo, 
-                    certificados.titulo AS certificadoTitulo,
-                    ventas.id,
-                    ventas.externoNombre,
-                    ventas.externoCarnet,
-                    ventas.precio,
-                    ventas.descripcion,
-                    ventas.user
-                FROM ventas
-                LEFT JOIN cursos ON ventas.id_curso = cursos.id
-                LEFT JOIN estudiantes ON ventas.id_estudiante = estudiantes.id
-                LEFT JOIN certificados ON ventas.id_certificado = certificados.id
-                WHERE ventas.tipo = ?";
+                cursos.titulo AS cursoTitulo, 
+                certificados.titulo AS certificadoTitulo,
+                ventas.id,
+                ventas.externoNombre,
+                ventas.externoCarnet,
+                ventas.precio,
+                ventas.descripcion,
+                ventas.user
+              FROM ventas
+              LEFT JOIN cursos ON ventas.id_curso = cursos.id
+              LEFT JOIN estudiantes ON ventas.id_estudiante = estudiantes.id
+              LEFT JOIN certificados ON ventas.id_certificado = certificados.id
+              WHERE ventas.tipo = ?";
 
-        // Agregar condición si se pasa el parámetro $user
+        // Agregar condiciones según los parámetros
         if ($user) {
             $query .= " AND ventas.user = ?";
+        }
+        if ($anio) {
+            $query .= " AND YEAR(ventas.createt_at) = ?";
+        }
+        if ($month) {
+            $query .= " AND MONTH(ventas.createt_at) = ?";
         }
 
         // Preparar la consulta
         if ($stmt = $this->db->prepare($query)) {
-            // Definir los tipos de parámetros a vincular
+            // Establecer los tipos de los parámetros
+            $types = 's'; // Al menos el tipo de 'tipo' será string
+            $params = [$tipo]; // Empezamos con el tipo como primer parámetro
+
+            // Si se pasa un usuario, añadir a los parámetros
             if ($user) {
-                $stmt->bind_param('ss', $tipo, $user);
-            } else {
-                $stmt->bind_param('s', $tipo);
+                $types .= 's';
+                $params[] = $user;
             }
+            // Si se pasa un año, añadir a los parámetros
+            if ($anio) {
+                $types .= 's';
+                $params[] = $anio;
+            }
+            // Si se pasa un mes, añadir a los parámetros
+            if ($month) {
+                $types .= 's';
+                $params[] = $month;
+            }
+
+            // Vincular los parámetros correctamente
+            $stmt->bind_param($types, ...$params);
 
             // Ejecutar la consulta
             $stmt->execute();
             $result = $stmt->get_result();
 
             // Verificar si hay resultados
-            if ($result) {
+            if ($result->num_rows > 0) {
                 $ventas = [];
                 while ($row = $result->fetch_assoc()) {
                     $ventas[] = $row;
@@ -61,30 +82,36 @@ class VentasModel
                 return $ventas;
             } else {
                 $stmt->close();
-                return "Error: No se encontraron resultados.";
+                return [];
             }
         } else {
             return "Error: " . $this->db->error;
         }
     }
-    public function obtenerTotalVentas($user = '', $tipo = '')
+
+    public function obtenerTotalVentas($user = '', $tipo = '', $anio = NULL, $month = NULL)
     {
-        // Prepara la consulta SQL
+
         $query = "SELECT SUM(ventas.precio) AS totalPrecio FROM ventas LEFT JOIN cursos ON ventas.id_curso = cursos.id LEFT JOIN estudiantes ON ventas.id_estudiante = estudiantes.id LEFT JOIN certificados ON ventas.id_certificado = certificados.id WHERE 1=1";
 
-        // Agregar condición si se pasa el parámetro $user
+
         if ($user) {
             $query .= " AND ventas.user LIKE ?";
         }
         if ($tipo) {
             $query .= " AND ventas.tipo LIKE ?";
         }
+        if ($anio) {
+            $query .= " AND YEAR(ventas.createt_at) = ?";
+        }
+        if ($month) {
+            $query .= " AND MONTH(ventas.createt_at) = ?";
+        }
 
-        // Preparar la consulta
         if ($stmt = $this->db->prepare($query)) {
             $params = [];
             $types = '';
-            // Definir los tipos de parámetros a vincular
+
             if ($user) {
                 $params[] = $user;
                 $types .= 's';
@@ -93,14 +120,25 @@ class VentasModel
                 $params[] = $tipo;
                 $types .= 's';
             }
+            // Si se pasa un año, añadir a los parámetros
+            if ($anio) {
+                $types .= 's';
+                $params[] = $anio;
+            }
+            // Si se pasa un mes, añadir a los parámetros
+            if ($month) {
+                $types .= 's';
+                $params[] = $month;
+            }
+
             if ($params) {
                 $stmt->bind_param($types, ...$params);
             }
-            // Ejecutar la consulta
+
             $stmt->execute();
             $result = $stmt->get_result();
 
-            // Verificar si hay resultados
+
             if ($result) {
                 $ventas = [];
                 while ($row = $result->fetch_assoc()) {
@@ -120,12 +158,12 @@ class VentasModel
 
     public function obtenerVentasPorId($id)
     {
-        // Verifica que $id sea un número válido
+
         if (!isset($id) || !is_numeric($id) || $id <= 0) {
             return "El ID de la venta es obligatorio y debe ser un número válido.";
         }
 
-        // Prepara la consulta SQL
+
         $query = "SELECT 
                     cursos.id AS cursoId, 
                     estudiantes.id AS estudianteId, 
@@ -133,6 +171,7 @@ class VentasModel
                     cursos.titulo AS cursoTitulo, 
                     certificados.titulo AS certificadoTitulo,
                     ventas.id,
+                    ventas.comprobante,
                     ventas.externoNombre,
                     ventas.externoCarnet,
                     ventas.precio,
@@ -145,7 +184,7 @@ class VentasModel
                 LEFT JOIN certificados ON ventas.id_certificado = certificados.id 
                 WHERE ventas.id = ?";
 
-        // Prepara la consulta
+
         $stmt = $this->db->prepare($query);
         $stmt->bind_param("i", $id);
 
@@ -153,7 +192,7 @@ class VentasModel
             $result = $stmt->get_result();
             $venta = $result->fetch_assoc();
 
-            // Verifica si se encontró la venta
+
             if ($venta) {
                 $stmt->close();
                 return $venta;
@@ -168,15 +207,15 @@ class VentasModel
     }
 
 
-    public function agregarVentas($id_curso = NULL, $id_certificado = NULL, $id_estudiante = NULL, $externoNombre, $externoCarnet, $precio, $descripcion, $tipo, $user)
+    public function agregarVentas($id_curso = NULL, $id_certificado = NULL, $id_estudiante = NULL, $externoNombre, $externoCarnet, $precio, $descripcion, $tipo, $user, $comprobante)
     {
         $query2 = 'SET FOREIGN_KEY_CHECKS=0';
         $stmt2 = $this->db->prepare($query2);
         $stmt2->execute();
-        $query = "INSERT INTO ventas (id_curso, id_certificado, id_estudiante, externoNombre, externoCarnet, precio, descripcion, tipo, user) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)";
+        $query = "INSERT INTO ventas (id_curso, id_certificado, id_estudiante, externoNombre, externoCarnet, precio, descripcion, tipo, user, comprobante) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->db->prepare($query);
-        $stmt->bind_param("iiissdsss", $id_curso, $id_certificado, $id_estudiante, $externoNombre, $externoCarnet, $precio, $descripcion, $tipo, $user);
+        $stmt->bind_param("iiissdssss", $id_curso, $id_certificado, $id_estudiante, $externoNombre, $externoCarnet, $precio, $descripcion, $tipo, $user, $comprobante);
         if ($stmt->execute()) {
             $query2 = 'SET FOREIGN_KEY_CHECKS=1';
             $stmt2 = $this->db->prepare($query2);

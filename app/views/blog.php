@@ -31,6 +31,14 @@
 
     <script defer src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+    <style>
+        @media (min-width: 768px) {
+            .custom-width {
+                width: 800px;
+            }
+        }
+    </style>
+
 </head>
 
 <body>
@@ -64,13 +72,12 @@
 
             <nav id="navbar" class="navbar">
                 <ul>
-                    <li><a href="#hero">Inicio</a></li>
-                    <li><a href="#about">Acerca de</a></li>
-                    <li><a href="#menu">Cursos</a></li>
-                    <li><a href="#events">Eventos</a></li>
-                    <li><a href="#chefs">Instructores</a></li>
-                    <li><a href="#gallery">Galería</a></li>
-                    <li><a href="#contact">Contacto</a></li>
+                    <li><a href="/#hero">Inicio</a></li>
+                    <li><a href="/#about">Acerca de</a></li>
+                    <li><a href="/#benefits">Beneficios</a></li>
+                    <li><a href="/#events">Eventos</a></li>
+                    <li><a href="/#cursos">Cursos</a></li>
+                    <li><a href="/#contact">Contacto</a></li>
                     <li class="dropdown"><a href="#"><span>Blog</span> <i
                                 class="bi bi-chevron-down dropdown-indicator"></i></a>
                         <ul>
@@ -111,7 +118,7 @@
 
         </div>
     </header>
-    <section class="container mx-auto" style="width: 700px;">
+    <section class="container mx-auto custom-width">
         <div class="my-4">
             <h1 class="display-4 fw-bold mb-2"><?php echo $post['Title'] ?></h1>
             <?php

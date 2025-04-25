@@ -35,7 +35,7 @@
                     <?php foreach ($docentes['docentes'] as $docente): ?>
                         <tr>
                             <th scope="row"><?php echo str_pad($docente['id'], 5, '0', STR_PAD_LEFT); ?></th>
-                            <td><?php echo $docente['nombres'] .' ' .$docente['apellidos']; ; ?></td>
+                            <td><?php echo $docente['nombres'] . ' ' . $docente['apellidos'];; ?></td>
                             <td><?php echo $docente['correo']; ?></td>
                             <td><?php echo $docente['carnet']; ?></td>
                             <td><?php echo $docente['telefono']; ?></td>
@@ -55,8 +55,8 @@
                 <?php endif; ?>
             </tbody>
         </table>
-             <!-- Paginación -->
-             <div class="d-flex justify-content-center">
+        <!-- Paginación -->
+        <div class="d-flex justify-content-center">
             <nav>
                 <ul class="pagination">
                     <?php
@@ -92,27 +92,27 @@
         </div>
     </div>
 </main>
-<dialog id="agregarDocente">
+<dialog id="agregarDocente" class="dialogMid">
     <form id="formDocentes" method="post" enctype="multipart/form-data">
         <input type="text" id="id" name="id" hidden>
         <div class="row">
-            <div class="mb-3 col-6">
+            <div class="mb-3 col-12 col-md-6">
                 <label for="nombre" class="form-label">Nombre</label>
                 <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre">
             </div>
-            <div class="mb-3 col-6">
+            <div class="mb-3 col-12 col-md-6">
                 <label for="apellido" class="form-label">Apellido</label>
                 <input type="text" class="form-control" id="apellido" name="apellido" placeholder="Apellido">
             </div>
-            <div class="mb-3 col-6">
+            <div class="mb-3 col-12 col-md-6">
                 <label for="carnet" class="form-label">Carnet</label>
                 <input type="text" class="form-control" id="carnet" name="carnet" placeholder="Carnet">
             </div>
-            <div class="mb-3 col-6">
+            <div class="mb-3 col-12 col-md-6">
                 <label for="correo" class="form-label">Correo</label>
                 <input type="email" class="form-control" id="correo" name="correo" placeholder="Correo">
             </div>
-            <div class="mb-3 col-6">
+            <div class="mb-3 col-12 col-md-4">
                 <label for="estadoCivil" class="form-label">Estado civil</label>
                 <select name="estadoCivil" class="form-select" name="estadoCivil" id="estadoCivil">
                     <option value="Soltero">Soltero</option>
@@ -122,30 +122,30 @@
                 </select>
             </div>
 
-            <div class="mb-3 col-6">
+            <div class="mb-3 col-12 col-md-4">
                 <label for="telefono" class="form-label">Telefono</label>
                 <input type="text" class="form-control" id="telefono" name="telefono" placeholder="Telefono">
             </div>
 
-            <div class="mb-3 col-6">
+            <div class="mb-3 col-12 col-md-4">
                 <label for="universidad" class="form-label">Universidad</label>
                 <input type="text" class="form-control" id="universidad" name="universidad" placeholder="Universidad">
             </div>
 
-            <div class="mb-3 col-6">
+            <div class="mb-3 col-12 col-md-6">
                 <label for="direccion" class="form-label">Direccion Domicilio</label>
                 <input type="text" class="form-control" id="direccion" name="direccion" placeholder="Dirección">
             </div>
 
-            <div class="mb-3 col-12">
+            <div class="mb-3 col-12 col-md-6">
                 <label for="imagen" class="form-label">Foto</label>
                 <input type="file" class="form-control" id="imagen" name="imagen" placeholder="imagen" accept="image/*">
             </div>
-            <div class="mb-3 col-12">
+            <div class="mb-3 col-12 col-md-6">
                 <label for="firma" class="form-label">Firma</label>
                 <input type="file" class="form-control" id="firma" name="firma" placeholder="firma" accept="image/*">
             </div>
-            <div class="mb-3 col-12">
+            <div class="mb-3 col-12 col-md-6">
                 <label for="curriculum" class="form-label">Curriculum</label>
                 <input type="file" class="form-control" id="curriculum" name="curriculum" placeholder="curriculum" accept="image/*">
             </div>

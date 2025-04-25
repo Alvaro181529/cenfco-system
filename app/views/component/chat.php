@@ -79,11 +79,11 @@
     }
 </style>
 
-<div id="chatbot-btn">
+<div id="chatbot-btn" data-aos="zoom-out" data-aos-delay="300">
     <i>💬</i>
 </div>
 
-<div id="chatbot">
+<div id="chatbot" >
     <div id="chat-area">
     </div>
     <form id="messages">
