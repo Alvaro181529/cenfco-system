@@ -64,6 +64,15 @@ class HomeController
     }
     public function cursos()
     {
+        $titulo = isset($_GET['titulo']) ? $_GET['titulo'] : null;
+
+        // error_log(var_export($titulo, true));
+        // Obtener parámetros de paginación
+        $pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;  // Página por defecto es 1
+        $resultadosPorPagina = isset($_GET['total']) ? (int)$_GET['total'] : 10;  // 10 resultados por página por defecto
+
+        error_log("titulo");
+        error_log($resultadosPorPagina);
         if (isset($_SESSION['user_id'])) {
             $success = "iniciado";
         } else {
@@ -81,7 +90,7 @@ class HomeController
                 'urlShort' => $menu['urlShort']
             ];
         }
-        $cursos = $this->homeModel->obtenerCursos();
+        $cursos = $this->homeModel->obtenerCursos(null, $titulo, null, $pagina, $resultadosPorPagina);
         require __DIR__ . '/../views/cursos.php';
     }
 

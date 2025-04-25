@@ -120,7 +120,7 @@
         }
 
         .course-image {
-            height: 180px;
+            height: 250px;
             object-fit: cover;
         }
 
@@ -197,6 +197,7 @@
 
         .pagination .page-item.active .page-link {
             background-color: var(--primary-color);
+            color: white;
             border-color: var(--primary-color);
         }
 
@@ -326,14 +327,16 @@
             <h1 class="display-5 fw-bold mb-5">Explora Nuestros Cursos</h1>
 
             <!-- Search Bar -->
-            <div class="search-container mt-5">
-                <div class="input-group">
-                    <input type="text" class="form-control search-input" placeholder="Buscar cursos..." aria-label="Buscar cursos">
-                    <button class="btn btn-warning search-button" type="button">
-                        <i class="fas fa-search me-2"></i> Buscar
-                    </button>
+            <form action="/cursos" method="GET">
+                <div class="search-container mt-5">
+                    <div class="input-group">
+                        <input type="text" class="form-control search-input" name="titulo" placeholder="Buscar cursos..." aria-label="Buscar cursos" value="<?php echo isset($_GET['titulo']) ? $_GET['titulo'] : ''; ?>">
+                        <button class="btn btn-warning search-button" type="submit">
+                            <i class="fas fa-search me-2"></i> Buscar
+                        </button>
+                    </div>
                 </div>
-            </div>
+            </form>
             <div class="mt-5">
                 <a href="#cursos" class="btn btn-warning">Explorar Cursos</a>
                 <button class="btn btn-light" id="contactenos">Contáctenos</button>
@@ -441,12 +444,24 @@
             <!-- Course Listings -->
             <div class="col-lg-9">
                 <!-- Sort and Filter Bar -->
-                <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
-                    <p class="mb-3 mb-md-0"><strong>Mostrando 12</strong> de 42 cursos</p>
-                </div>
+                <form action="/cursos" method="get" id="cursoForm">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
+                        <p class="mb-3 mb-md-0"><strong> Cursos totales: <?php echo $cursos['totalCursos'] ?></strong></p>
+                        <div class="d-flex align-items-center">
+                            <label for="sortCourses" class="me-2">Ver:</label>
+                            <select class="form-select" id="sortCourses" name="total" onchange="this.form.submit();">
+                                <option value="10" <?php echo isset($_GET['total']) && $_GET['total'] == '10' ? 'selected' : ''; ?>>10</option>
+                                <option value="15" <?php echo isset($_GET['total']) && $_GET['total'] == '15' ? 'selected' : ''; ?>>15</option>
+                                <option value="25" <?php echo isset($_GET['total']) && $_GET['total'] == '25' ? 'selected' : ''; ?>>25</option>
+                                <option value="50" <?php echo isset($_GET['total']) && $_GET['total'] == '50' ? 'selected' : ''; ?>>50</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+
 
                 <!-- Active Filters Display -->
-                <div class="active-filters mb-4">
+                <!-- <div class="active-filters mb-4">
                     <div class="d-flex flex-wrap gap-2">
                         <span class="badge rounded-pill bg-light text-dark p-2">
                             Tecnología <i class="fas fa-times-circle ms-1"></i>
@@ -458,12 +473,12 @@
                             Menos de $50 <i class="fas fa-times-circle ms-1"></i>
                         </span>
                     </div>
-                </div>
+                </div> -->
 
                 <!-- Course Grid -->
                 <div class="row g-4">
                     <!-- Course 1 -->
-                    <?php foreach ($cursos as $curso): ?>
+                    <?php foreach ($cursos['cursos'] as $curso): ?>
                         <div class="col-md-6 col-lg-4">
                             <div class="card course-card">
                                 <div class="position-relative">
@@ -531,8 +546,59 @@
                     </div>
                 </div>
 
-                <!-- Pagination -->
-                <nav aria-label="Course pagination" class="mt-5">
+                <!-- Paginación -->
+                <div class="d-flex justify-content-center">
+                    <nav aria-label="Paginación de cursos">
+                        <ul class="pagination justify-content-center">
+                            <?php
+                            // Si estamos en la página 1, deshabilitar enlace "Anterior"
+                            if ($cursos['paginaActual'] > 1):
+                            ?>
+                                <li class="page-item">
+                                    <a class="page-link" href="?pagina=<?php echo $cursos['paginaActual'] - 1; ?>&titulo=<?php echo htmlspecialchars($_GET['titulo'] ?? ''); ?>" aria-label="Anterior">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                            <?php else: ?>
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" aria-label="Anterior">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                            <?php endif; ?>
+
+                            <?php
+                            // Mostrar los enlaces de las páginas
+                            for ($i = 1; $i <= $cursos['totalPaginas']; $i++):
+                            ?>
+                                <li class="page-item <?php echo $i === $cursos['paginaActual'] ? 'active' : ''; ?>">
+                                    <a class="page-link" href="?pagina=<?php echo $i; ?>&titulo=<?php echo htmlspecialchars($_GET['titulo'] ?? ''); ?>">
+                                        <?php echo $i; ?>
+                                    </a>
+                                </li>
+                            <?php endfor; ?>
+
+                            <?php
+                            // Si no estamos en la última página, mostrar el enlace "Siguiente"
+                            if ($cursos['paginaActual'] < $cursos['totalPaginas']):
+                            ?>
+                                <li class="page-item">
+                                    <a class="page-link" href="?pagina=<?php echo $cursos['paginaActual'] + 1; ?>&titulo=<?php echo htmlspecialchars($_GET['titulo'] ?? ''); ?>" aria-label="Siguiente">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            <?php else: ?>
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" aria-label="Siguiente">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            <?php endif; ?>
+                        </ul>
+                    </nav>
+                </div>
+
+                <!-- <nav aria-label="Course pagination" class="mt-5">
                     <ul class="pagination justify-content-center">
                         <li class="page-item disabled">
                             <a class="page-link" href="#" aria-label="Previous">
@@ -549,7 +615,7 @@
                             </a>
                         </li>
                     </ul>
-                </nav>
+                </nav> -->
             </div>
         </div>
     </div>
