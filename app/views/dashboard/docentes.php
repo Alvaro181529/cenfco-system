@@ -41,7 +41,7 @@
                             <td><?php echo $docente['telefono']; ?></td>
                             <td><?php echo $docente['estadoCivil']; ?></td>
                             <td><?php echo $docente['universidad']; ?></td>
-                            <td><?php echo $docente['observacion']; ?></td>
+                            <td><?php echo !empty($docente['observacion']) ? $docente['observacion'] : 'Sin Observación'; ?></td>
                             <td class="gap-4">
                                 <a onclick="editarDocente(<?php echo $docente['id']; ?>)" data-bs-toggle="tooltip" data-bs-title="Editar" class="text-primary"><i class="bi bi-pencil-fill"></i></a>
                                 <form id="deleteForm<?php echo $docente['id']; ?>" action="/dashboard/docentes/eliminar" method="POST" style="display:inline-block;">
@@ -98,19 +98,37 @@
         <div class="row">
             <div class="mb-3 col-12 col-md-6">
                 <label for="nombre" class="form-label">Nombre</label>
-                <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre">
+                <input type="text" class="form-control" id="nombre" maxlength="50" name="nombre" placeholder="Nombre" required>
             </div>
             <div class="mb-3 col-12 col-md-6">
                 <label for="apellido" class="form-label">Apellido</label>
-                <input type="text" class="form-control" id="apellido" name="apellido" placeholder="Apellido">
+                <input type="text" class="form-control" id="apellido" maxlength="50" name="apellido" placeholder="Apellido" required>
             </div>
             <div class="mb-3 col-12 col-md-6">
-                <label for="carnet" class="form-label">Carnet</label>
-                <input type="text" class="form-control" id="carnet" name="carnet" placeholder="Carnet">
+                <div class="row">
+                    <div class="col-8">
+                        <label for="carnet" class="form-label">Carnet</label>
+                        <input type="number" min="4" class=" form-control" id="carnet" maxlength="11" name="carnet" placeholder="Carnet" required>
+                    </div>
+                    <div class="col-4">
+                        <label for="carnet" class="form-label" required>Expedido</label>
+                        <select name="expedido" class="form-select" id="expedido">
+                            <option value="LP">La Paz</option>
+                            <option value="OR">Oruro</option>
+                            <option value="CB">Cochabamba</option>
+                            <option value="SC">Santa Cruz</option>
+                            <option value="CH">Chuquisaca</option>
+                            <option value="PT">Potosí</option>
+                            <option value="TJ">Tarija</option>
+                            <option value="BN">Beni</option>
+                            <option value="PD">Pando</option>
+                        </select>
+                    </div>
+                </div>
             </div>
             <div class="mb-3 col-12 col-md-6">
                 <label for="correo" class="form-label">Correo</label>
-                <input type="email" class="form-control" id="correo" name="correo" placeholder="Correo">
+                <input type="email" class="form-control" id="correo" name="correo" placeholder="Correo" required>
             </div>
             <div class="mb-3 col-12 col-md-4">
                 <label for="estadoCivil" class="form-label">Estado civil</label>
@@ -276,13 +294,13 @@
                 $('#vistaCorreo').textContent = docente.correo;
                 $('#vistaTelefono').textContent = docente.telefono;
                 $('#vistaEstadoCivil').textContent = '' + docente.estadoCivil;
-                $('#vistaCurriculum').href = '/storage/uploads/docentes/' + docente.curriculum;
-                $('#vistaFirma').src = '/storage/uploads/docentes/' + docente.firma;
-                $('#vistaFoto').src = '/storage/uploads/docentes/' + docente.foto;
+                $('#vistaCurriculum').href = docente.curriculum ? `/storage/uploads/docentes/${docente.curriculum}` : '#';
+                $('#vistaFirma').src = docente.firma ? `/storage/uploads/docentes/${docente.firma}` : '/assets/img/placeholder.svg';
+                $('#vistaFoto').src = docente.foto ? `/storage/uploads/docentes/${docente.foto}` : '/assets/img/placeholder.svg';
                 $('#vistaDireccion').textContent = docente.direccionDomicilio;
                 $('#vistaUniversidad').textContent = docente.universidad;
                 $('#vistaCarnet').textContent = docente.carnet;
-                $('#vistaObservacion').textContent = docente.observacion;
+                $('#vistaObservacion').textContent = docente.observacion ?? 'Sin Observación';
 
                 // Información completa
                 $('#vistaId').textContent = docente.id;
@@ -314,16 +332,18 @@
                 return response.json();
             })
             .then(docente => {
+                const [numeroCI, expedido] = docente.carnet.split('-');
                 $('#id').value = docente.id;
                 $('#nombre').value = docente.nombres;
                 $('#apellido').value = docente.apellidos;
-                $('#carnet').value = docente.carnet;
+                $('#carnet').value = numeroCI;
+                $('#expedido').value = expedido;
                 $('#correo').value = docente.correo;
                 $('#estadoCivil').value = docente.estadoCivil;
                 $('#telefono').value = docente.telefono;
                 $('#universidad').value = docente.universidad;
                 $('#direccion').value = docente.direccionDomicilio;
-                $('#observacion').value = docente.observacion;
+                $('#observacion').value = docente.observacion ?? 'Sin Observación';
                 $('#agregarDocente').showModal()
             })
             .catch(error => {

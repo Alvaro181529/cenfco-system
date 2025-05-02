@@ -126,7 +126,7 @@ $router->map('DELETE', '/dashboard/cursos/eliminar', [$CursosController, 'Elimin
 
 //Eventos
 $router->map('GET', '/dashboard/eventos', [$EventosController, 'eventos']);
-$router->map('GET', '/dashboard/eventos/[i:id]', [$EventosController, 'ObtenerCurso']);
+$router->map('GET', '/dashboard/eventos/[i:id]', [$EventosController, 'ObtenerEvento']);
 $router->map('POST', '/dashboard/eventos', [$EventosController, 'Guardado']);
 $router->map('POST', '/dashboard/eventos/actualizar', [$EventosController, 'Actualizar']);
 $router->map('DELETE', '/dashboard/eventos/eliminar', [$EventosController, 'Eliminar']);

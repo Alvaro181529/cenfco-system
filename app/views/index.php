@@ -572,6 +572,6 @@
 </body>
 
 </html>
-
+<?php require 'component/whats.php' ?>
 <?php require 'component/chat.php' ?>
 <?php require 'template/foot.php' ?>

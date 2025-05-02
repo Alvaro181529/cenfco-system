@@ -86,15 +86,15 @@
         <div class="row">
             <div class="mb-3">
                 <label for="nombre" class="form-label">Nombre</label>
-                <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre">
+                <input type="text" class="form-control" id="nombre" name="nombre" minlength="5" maxlength="50" placeholder="Nombre" required>
             </div>
             <div class="mb-3">
                 <label for="correo" class="form-label">Correo</label>
-                <input type="email" class="form-control" id="correo" name="correo" placeholder="Correo">
+                <input type="email" class="form-control" id="correo" name="correo"  minlength="5" placeholder="Correo" required>
             </div>
             <div class="mb-3" id="cajaPass">
                 <label for="password" class="form-label">Contraseña</label>
-                <input type="password" class="form-control" id="password" name="password" placeholder="Contraseña">
+                <input type="password" class="form-control" id="password"  title="La contraseña debe tener al menos 8 caracteres, incluyendo una letra, un número y un carácter especial."  pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" maxlength="50" name="password" placeholder="Contraseña">
             </div>
             <div class="mb-3">
                 <label for="rol" class="form-label">Roles</label>

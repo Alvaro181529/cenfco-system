@@ -87,7 +87,7 @@
         <div class="row">
             <div class="mb-3">
                 <label for="nombre" class="form-label">Nombre</label>
-                <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre">
+                <input type="text" class="form-control" id="nombre" name="nombre" maxlength="50" placeholder="Nombre" required>
             </div>
             <div class="row">
                 <div class="mb-3 col">

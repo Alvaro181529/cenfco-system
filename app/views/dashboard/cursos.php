@@ -27,7 +27,7 @@
         <?php foreach ($cursos['cursos'] as $curso): ?>
             <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
                 <div class="card">
-                    <img class="card-img-top" src="/storage/uploads/cursos/<?php echo $curso['imagen'] ?>" alt="<?php echo $curso['titulo']; ?>" />
+                    <img class="card-img-top" style="height: 350px;object-fit: cover;" src="<?php echo (!empty($curso['imagen']) ? '/storage/uploads/cursos/' . $curso['imagen'] : '/assets/img/placeholder.svg') ?>" alt="<?php echo $curso['titulo']; ?>" />
                     <div class="card-body">
                         <div class="row">
                             <h4 class="card-title col"><?php echo $curso['titulo']; ?></h4>
@@ -104,7 +104,7 @@
         <div class="row">
             <div class="mb-3 col">
                 <label for="titulo" class="form-label">Titulo</label>
-                <input type="text" class="form-control" id="titulo" name="titulo" placeholder="Titulo" require>
+                <input type="text" class="form-control" id="titulo" name="titulo" maxlength="100" placeholder="Titulo" required>
             </div>
             <div class="mb-3 col">
                 <label for="titulo" class="form-label">Docente</label>
@@ -118,7 +118,7 @@
         </div>
         <div class="mb-3 col">
             <label for="titulo" class="form-label">Grupo Facebook</label>
-            <input type="text" class="form-control" id="grupoFacebook" name="grupoFacebook" placeholder="Facebook">
+            <input type="text" class="form-control" id="grupoFacebook" name="grupoFacebook"  maxlength="50" placeholder="Facebook">
         </div>
         <div class="row">
             <div class="mb-3 col">
@@ -133,17 +133,17 @@
             </div>
             <div class="mb-3 col">
                 <label for="precio" class="form-label">Precio</label>
-                <input type="number" min="0.00" step="0.01" class="form-control" id="precio" name="precio" placeholder="Precio">
+                <input type="number" min="0.00" step="0.01"  max="1000.00" class="form-control" id="precio" name="precio" placeholder="Precio">
             </div>
         </div>
         <div class="row">
             <div class="mb-3 col">
                 <label for="fechaInicio" class="form-label">Fecha Inicio</label>
-                <input type="date" class="form-control" id="fechaInicio" name="fechaInicio">
+                <input type="date" class="form-control" id="fechaInicio" name="fechaInicio" required>
             </div>
             <div class="mb-3 col">
                 <label for="fechaFin" class="form-label">Fecha Fin</label>
-                <input type="date" class="form-control" id="fechaFin" name="fechaFin">
+                <input type="date" class="form-control" id="fechaFin" name="fechaFin" required>
             </div>
         </div>
         <div class="mb-3">
@@ -152,7 +152,7 @@
         </div>
         <div class="mb-3">
             <label for="imagen" class="form-label">Foto</label>
-            <input type="file" class="form-control" id="imagen" name="imagen" placeholder="Imagen" accept="image/*" require>
+            <input type="file" class="form-control" id="imagen" name="imagen" placeholder="Imagen" accept="image/*" required>
         </div>
         <div class="row">
             <div class="mb-3 col">
@@ -171,7 +171,7 @@
                 <label class="form-label" for="certificadoPrecio">
                     Precio certificado individual
                 </label>
-                <input class="form-control" type="number" value="" min="0.00" step="0.01"  id="certificadoPrecio" placeholder="Precio">
+                <input class="form-control" type="number" value="" min="0.00" step="0.01" max="1000.00" id="certificadoPrecio" placeholder="Precio">
             </div>
         </div>
 
@@ -188,9 +188,7 @@
 
     <div class="card">
         <div class="card-header text-center text-muted">
-            <div>
-                <img id="vistaFoto" class="card-img-top mb-3" width="200" height="400" alt="Perfil">
-            </div>
+                <img id="vistaFoto" style="height: 350px;object-fit: cover; z-index: -9999;" class="card-img-top mb-3" width="200" alt="Perfil">
             <h5 class="card-title mb-0" id="vistaNombre"></h5>
             <div>
                 <div class="d-flex justify-content-center text-muted">
@@ -268,7 +266,7 @@
             })
             .then(curso => {
                 $('#id').textContent = curso.id;
-                $('#vistaFoto').src = '/storage/uploads/cursos/' + curso.imagen;
+                $('#vistaFoto').src = curso.imagen?`/storage/uploads/cursos/${curso.imagen}`:'/assets/img/placeholder.svg' ;
                 $('#vistaInicio').textContent = curso.mostrarInicio ? 'Se esta mostrando' : 'No se esta mostrando';
                 $('#vistaNombre').textContent = curso.titulo ? curso.titulo : 'No tiene titulo';
                 $('#vistaDocente').textContent = curso.docente ? curso.docente : 'No tiene docente';

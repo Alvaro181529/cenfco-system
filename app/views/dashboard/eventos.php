@@ -27,7 +27,7 @@
         <?php foreach ($eventos['eventos'] as $evento): ?>
             <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
                 <div class="card">
-                    <img class="card-img-top" src="/storage/uploads/eventos/<?php echo $evento['imagen'] ?>" alt="<?php echo $evento['titulo']; ?>" />
+                    <img class="card-img-top" style="height: 350px;object-fit: cover;" src="<?php echo (!empty($evento['imagen']) ? '/storage/uploads/eventos/' . $evento['imagen'] : '/assets/img/placeholder.svg') ?>" alt="<?php echo $evento['titulo']; ?>" />
                     <div class="card-body">
                         <div class="row">
                             <h4 class="card-title col"><?php echo $evento['titulo']; ?></h4>
@@ -60,41 +60,41 @@
         <?php endforeach; ?>
     </div>
 
-        <!-- Paginación -->
-        <div class="d-flex justify-content-center">
-            <nav>
-                <ul class="pagination">
-                    <?php
-                    // Si estamos en la página 1, no mostrar enlace "Anterior"
-                    if ($eventos['paginaActual'] > 1):
-                    ?>
-                        <li class="page-item">
-                            <a class="page-link" href="?pagina=<?php echo $eventos['paginaActual'] - 1; ?>&titulo=<?php echo htmlspecialchars($_GET['titulo'] ?? ''); ?>">Anterior</a>
-                        </li>
-                    <?php endif; ?>
+    <!-- Paginación -->
+    <div class="d-flex justify-content-center">
+        <nav>
+            <ul class="pagination">
+                <?php
+                // Si estamos en la página 1, no mostrar enlace "Anterior"
+                if ($eventos['paginaActual'] > 1):
+                ?>
+                    <li class="page-item">
+                        <a class="page-link" href="?pagina=<?php echo $eventos['paginaActual'] - 1; ?>&titulo=<?php echo htmlspecialchars($_GET['titulo'] ?? ''); ?>">Anterior</a>
+                    </li>
+                <?php endif; ?>
 
-                    <?php
-                    // Mostrar los enlaces de las páginas
-                    for ($i = 1; $i <= $eventos['totalPaginas']; $i++):
-                    ?>
-                        <li class="page-item <?php echo $i === $eventos['paginaActual'] ? 'active' : ''; ?>">
-                            <a class="page-link" href="?pagina=<?php echo $i; ?>&titulo=<?php echo htmlspecialchars($_GET['titulo'] ?? ''); ?>">
-                                <?php echo $i; ?>
-                            </a>
-                        </li>
-                    <?php endfor; ?>
+                <?php
+                // Mostrar los enlaces de las páginas
+                for ($i = 1; $i <= $eventos['totalPaginas']; $i++):
+                ?>
+                    <li class="page-item <?php echo $i === $eventos['paginaActual'] ? 'active' : ''; ?>">
+                        <a class="page-link" href="?pagina=<?php echo $i; ?>&titulo=<?php echo htmlspecialchars($_GET['titulo'] ?? ''); ?>">
+                            <?php echo $i; ?>
+                        </a>
+                    </li>
+                <?php endfor; ?>
 
-                    <?php
-                    // Si no estamos en la última página, mostrar el enlace "Siguiente"
-                    if ($eventos['paginaActual'] < $eventos['totalPaginas']):
-                    ?>
-                        <li class="page-item">
-                            <a class="page-link" href="?pagina=<?php echo $eventos['paginaActual'] + 1; ?>&titulo=<?php echo htmlspecialchars($_GET['titulo'] ?? ''); ?>">Siguiente</a>
-                        </li>
-                    <?php endif; ?>
-                </ul>
-            </nav>
-        </div>
+                <?php
+                // Si no estamos en la última página, mostrar el enlace "Siguiente"
+                if ($eventos['paginaActual'] < $eventos['totalPaginas']):
+                ?>
+                    <li class="page-item">
+                        <a class="page-link" href="?pagina=<?php echo $eventos['paginaActual'] + 1; ?>&titulo=<?php echo htmlspecialchars($_GET['titulo'] ?? ''); ?>">Siguiente</a>
+                    </li>
+                <?php endif; ?>
+            </ul>
+        </nav>
+    </div>
 </main>
 <dialog id="agregarCursos" class="dialogMid">
     <form id="formCursos" method="post" enctype="multipart/form-data">
@@ -103,13 +103,13 @@
         <div class="row">
             <div class="mb-3 col">
                 <label for="titulo" class="form-label">Titulo</label>
-                <input type="text" class="form-control" id="titulo" name="titulo" placeholder="Titulo" require>
+                <input type="text" class="form-control" id="titulo" name="titulo" placeholder="Titulo" required>
             </div>
             <div class="mb-3 col">
                 <label for="titulo" class="form-label">Docente</label>
                 <input type="text" list="listaDocente" class="form-control" id="docente" name="docente" placeholder="Docente">
                 <datalist id="listaDocente">
-                    <?php foreach ($docentes as $docente): ?>
+                    <?php foreach ($docentes['docentes'] as $docente): ?>
                         <option value="<?php echo $docente['nombres']; ?> <?php echo $docente['apellidos']; ?>"><?php echo $docente['nombres']; ?> <?php echo $docente['apellidos']; ?></option>
                     <?php endforeach; ?>
                 </datalist>
@@ -121,7 +121,7 @@
         </div>
         <div class="row">
             <div class="mb-3 col">
-                <label for="categoria" class="form-label">Categorias</label>
+                <label for="categoria" class="form-label" required>Categorias</label>
                 <select name="categoria" class="form-select" name="categoria" id="categoria">
                     <option value="Ciencias Humanas">Ciencias Humanas</option>
                     <option value="Arquitecturas">Arquitecturas</option>
@@ -131,27 +131,27 @@
                 </select>
             </div>
             <div class="mb-3 col">
-                <label for="precio" class="form-label">Precio</label>
-                <input type="number" min="0" class="form-control" id="precio" name="precio" placeholder="Precio">
+                <label for="precio" class="form-label" required>Precio</label>
+                <input type="number" min="0" step="0.01" max="1000.00" class="form-control" id="precio" name="precio" placeholder="Precio">
             </div>
         </div>
         <div class="row">
             <div class="mb-3 col">
                 <label for="fechaInicio" class="form-label">Fecha Inicio</label>
-                <input type="date" class="form-control" id="fechaInicio" name="fechaInicio">
+                <input type="date" class="form-control" id="fechaInicio" name="fechaInicio" required>
             </div>
             <div class="mb-3 col">
                 <label for="fechaFin" class="form-label">Fecha Fin</label>
-                <input type="date" class="form-control" id="fechaFin" name="fechaFin">
+                <input type="date" class="form-control" id="fechaFin" name="fechaFin" required>
             </div>
         </div>
         <div class="mb-3">
-            <label for="descripcion" class="form-label">Descripcion</label>
+            <label for="descripcion" class="form-label" required>Descripcion</label>
             <textarea id="descripcion" class="form-control" name="descripcion" placeholder="Descripcion"></textarea>
         </div>
         <div class="mb-3">
             <label for="imagen" class="form-label">Foto</label>
-            <input type="file" class="form-control" id="imagen" name="imagen" placeholder="Imagen" accept="image/*" require>
+            <input type="file" class="form-control" id="imagen" name="imagen" placeholder="Imagen" accept="image/*" required>
         </div>
         <div class="row">
             <div class="mb-3 col">
@@ -170,7 +170,7 @@
                 <label class="form-label" for="certificadoPrecio">
                     Precio certificado individual
                 </label>
-                <input class="form-control" type="number" value="" id="certificadoPrecio" placeholder="Precio">
+                <input class="form-control" type="number" step="0.01" max="1000.00" min="0.00" id="certificadoPrecio" placeholder="Precio">
             </div>
         </div>
 
@@ -187,9 +187,7 @@
 
     <div class="card">
         <div class="card-header text-center text-muted">
-            <div>
-                <img id="vistaFoto" class="card-img-top mb-3" width="200" height="400" alt="Perfil">
-            </div>
+            <img id="vistaFoto" style="height: 350px;object-fit: cover;" class="card-img-top mb-3" width="200" height="400" alt="Perfil">
             <h5 class="card-title mb-0" id="vistaNombre"></h5>
             <div>
                 <div class="d-flex justify-content-center text-muted">
@@ -267,7 +265,7 @@
             })
             .then(evento => {
                 $('#id').textContent = evento.id;
-                $('#vistaFoto').src = '/storage/uploads/eventos/' + evento.imagen;
+                $('#vistaFoto').src = evento.imagen ? `/storage/uploads/eventos/${evento.imagen}` : '/assets/img/placeholder.svg';
                 $('#vistaInicio').textContent = evento.mostrarInicio ? 'Se esta mostrando' : 'No se esta mostrando';
                 $('#vistaNombre').textContent = evento.titulo ? evento.titulo : 'No tiene titulo';
                 $('#vistaDocente').textContent = evento.docente ? evento.docente : 'No tiene docente';
@@ -311,6 +309,7 @@
     }
 
     function eliminarCurso(id) {
+        console.log(id)
         if (confirm("¿Estás seguro de que deseas eliminar este evento?")) {
             fetch('/dashboard/eventos/eliminar', {
                     method: 'DELETE',

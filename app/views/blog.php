@@ -142,5 +142,6 @@
             <?php echo $post['Content'] ?>
         </div>
     </section>
+    <?php require 'component/whats.php' ?>
     <?php require 'component/chat.php' ?>
     <?php require 'template/foot.php' ?>

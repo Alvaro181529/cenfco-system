@@ -15,6 +15,8 @@
     <link href="/assets/vendor/aos/aos.css" rel="stylesheet">
     <link href="/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
     <link href="/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+    <meta name="robots" content="noindex, nofollow">
+
     <style>
         :root {
             --primary-color: #0a0a4a;

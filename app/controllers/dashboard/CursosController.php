@@ -83,26 +83,25 @@ class CursosController
                 $error = "Error al subir la imagen.";
                 return;
             }
-
-            if ($certificado) {
-                $resultCertificado = $this->certificadosModel->agregarCertificado($titulo, $certificadoPrecio, $precio, $descripcion);
-            }
-
-            $result = $this->cursosModel->agregarCursos($titulo, $descripcion, $precio, $docente, $image_name, $categoria, $fechaInicio, $fechaFin, $mostrar);
-            if ($resultCertificado == "Nuevo certificado agregado exitosamente") {
-                header("Location: /dashboard/cursos");
-                exit();
-            } else {
-                echo $resultCertificado;
-            }
-            if ($result == "Nuevo curso agregado exitosamente") {
-                header("Location: /dashboard/cursos");
-                exit();
-            } else {
-                $error = $result;
-            }
         } else {
             $error = "Por favor, suba una imagen.";
+        }
+        if ($certificado) {
+            $resultCertificado = $this->certificadosModel->agregarCertificado($titulo, $certificadoPrecio, $precio, $descripcion);
+        }
+
+        $result = $this->cursosModel->agregarCursos($titulo, $descripcion, $precio, $docente, $image_name, $categoria, $fechaInicio, $fechaFin, $mostrar);
+        if ($resultCertificado == "Nuevo certificado agregado exitosamente") {
+            header("Location: /dashboard/cursos");
+            exit();
+        } else {
+            echo $resultCertificado;
+        }
+        if ($result == "Nuevo curso agregado exitosamente") {
+            header("Location: /dashboard/cursos");
+            exit();
+        } else {
+            $error = $result;
         }
     }
 

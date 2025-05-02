@@ -47,8 +47,8 @@
                 <?php endforeach; ?>
             </tbody>
         </table>
-             <!-- Paginación -->
-             <div class="d-flex justify-content-center">
+        <!-- Paginación -->
+        <div class="d-flex justify-content-center">
             <nav>
                 <ul class="pagination">
                     <?php
@@ -90,15 +90,33 @@
             <input type="text" id="id" name="id" hidden>
             <div class="mb-3 col-6">
                 <label for="nombre" class="form-label">Nombre</label>
-                <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre">
+                <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre" required>
             </div>
             <div class="mb-3 col-6">
                 <label for="apellido" class="form-label">Apellido</label>
-                <input type="text" class="form-control" id="apellido" name="apellido" placeholder="Apellido">
+                <input type="text" class="form-control" id="apellido" name="apellido" placeholder="Apellido" required>
             </div>
             <div class="mb-3 col-6">
-                <label for="carnet" class="form-label">Carnet</label>
-                <input type="text" class="form-control" id="carnet" name="carnet" placeholder="Carnet">
+                <div class="row g-1">
+                    <div class="col-8">
+                        <label for="carnet" class="form-label">Carnet</label>
+                        <input type="number" min="5" class="form-control" id="carnet" name="carnet" placeholder="Carnet" required>
+                    </div>
+                    <div class="col-4">
+                        <label for="carnet" class="form-label">Expedido</label>
+                        <select name="expedido" class="form-select" id="expedido" required>
+                            <option value="LP">LP</option>
+                            <option value="OR">OR</option>
+                            <option value="CB">CB</option>
+                            <option value="SC">SC</option>
+                            <option value="CH">CH</option>
+                            <option value="PT">PT</option>
+                            <option value="TJ">TJ</option>
+                            <option value="BN">BN</option>
+                            <option value="PD">PD</option>
+                        </select>
+                    </div>
+                </div>
             </div>
             <div class="mb-3 col-6">
                 <label for="correo" class="form-label">Correo</label>
@@ -107,7 +125,7 @@
 
             <div class="mb-3 col-6">
                 <label for="telefono" class="form-label">Celular</label>
-                <input type="text" class="form-control" id="telefono" name="telefono" placeholder="Telefono">
+                <input type="number" class="form-control" id="telefono" name="telefono" placeholder="Telefono">
             </div>
 
             <div class="mb-3 col-6">
@@ -132,7 +150,7 @@
         <h5 class="card-title mb-0"></h5>
         <button type="button" class="btn-close" id="vistaClose" aria-label="Close"></button>
     </div>
-    
+
     <div class="card">
         <div class="card-header text-center text-muted">
             <div>
@@ -187,7 +205,7 @@
             })
             .then(estudiante => {
                 $('#id').textContent = estudiante.id;
-                $('#vistaFoto').src = '/storage/uploads/estudiantes/' + estudiante.foto;
+                $('#vistaFoto').src = estudiante.foto ? `/storage/uploads/estudiantes/${estudiante.foto}` : '/assets/img/placeholder.svg';
                 $('#vistaNombre').textContent = estudiante.nombres + ' ' + estudiante.apellidos;
                 $('#vistaCarnet').textContent = estudiante.carnet;
                 $('#vistaCorreo').textContent = estudiante.correo;
@@ -211,10 +229,12 @@
                 return response.json();
             })
             .then(estudiante => {
+                const [numeroCI, expedido] = estudiante.carnet.split('-');
                 $('#id').value = estudiante.id;
                 $('#nombre').value = estudiante.nombres;
                 $('#apellido').value = estudiante.apellidos;
-                $('#carnet').value = estudiante.carnet;
+                $('#carnet').value = numeroCI;
+                $('#expedido').value = expedido;
                 $('#correo').value = estudiante.correo;
                 $('#telefono').value = estudiante.telefono;
                 $('#direccion').value = estudiante.direccionDomicilio;

@@ -2,89 +2,102 @@
 <?php require 'template/navbar.php'; ?>
 
 <main id="main" class="container" data-aos="fade-up">
-    <div class="row gap-4">
-        <div class="card mb-3 col" style="max-width: 540px;" id="certificado">
-            <div class="row g-0">
-                <div class="col-md-4">
-                    <img src="/assets/cenefco_grande.png" class="img-fluid rounded-start" alt="...">
-                </div>
-                <div class="col-md-8">
-                    <div class="card-body">
-                        <h5 class="card-title">Certificados</h5>
-                        <p class="card-text"><?php echo $cantidadDocentes ?></p>
+    <div class="row g-4">
+        <div class="col-12 col-md-4">
+            <div class="card mb-3" style="max-width: 540px;" id="certificado">
+                <div class="row g-0">
+                    <div class="col-4">
+                        <img src="/assets/cenefco_grande.png" class="img-fluid rounded-start" alt="...">
+                    </div>
+                    <div class="col-8">
+                        <div class="card-body">
+                            <h5 class="card-title">Certificados</h5>
+                            <p class="card-text"><?php echo $cantidadDocentes ?></p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="card mb-3 col" style="max-width: 540px;" id="docente">
-            <div class="row g-0">
-                <div class="col-md-4">
-                    <img src="/assets/cenefco_grande.png" class="img-fluid rounded-start" alt="...">
-                </div>
-                <div class="col-md-8">
-                    <div class="card-body">
-                        <h5 class="card-title">Docentes</h5>
-                        <p class="card-text"><?php echo $cantidadDocentes ?></p>
+        <div class="col-12 col-md-4">
+            <div class="card mb-3" style="max-width: 540px;" id="docente">
+                <div class="row g-0">
+                    <div class="col-4">
+                        <img src="/assets/cenefco_grande.png" class="img-fluid rounded-start" alt="...">
+                    </div>
+                    <div class="col-8">
+                        <div class="card-body">
+                            <h5 class="card-title">Docentes</h5>
+                            <p class="card-text"><?php echo $cantidadDocentes ?></p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="card mb-3 col" style="max-width: 540px;" id="ventaCertificado">
-            <div class="row g-0">
-                <div class="col-md-4">
-                    <img src="/assets/cenefco_grande.png" class="img-fluid rounded-start" alt="...">
-                </div>
-                <div class="col-md-8">
-                    <div class="card-body">
-                        <h5 class="card-title">Reporte Ventas</h5>
-                        <p class="card-text"><?php echo $cantidadDocentes ?></p>
+        <div class="col-12 col-md-4">
+            <div class="card mb-3" style="max-width: 540px;" id="ventaCertificado">
+                <div class="row g-0">
+                    <div class="col-4">
+                        <img src="/assets/cenefco_grande.png" class="img-fluid rounded-start" alt="...">
+                    </div>
+                    <div class="col-8">
+                        <div class="card-body">
+                            <h5 class="card-title">Reporte Ventas</h5>
+                            <p class="card-text"><?php echo $cantidadDocentes ?></p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="row gap-4">
 
-        <div class="card mb-3 col" style="max-width: 540px;" id="estudiantes">
-            <div class="row g-0">
-                <div class="col-md-4">
-                    <img src="/assets/cenefco_grande.png" class="img-fluid rounded-start" alt="...">
-                </div>
-                <div class="col-md-8">
-                    <div class="card-body">
-                        <h5 class="card-title">Estudiantes</h5>
-                        <p class="card-text"><?php echo $cantidadEstudiantes ?></p>
+    <div class="row g-4">
+        <div class="col-12 col-md-4">
+            <div class="card mb-3" style="max-width: 540px;" id="estudiantes">
+                <div class="row g-0">
+                    <div class="col-4">
+                        <img src="/assets/cenefco_grande.png" class="img-fluid rounded-start" alt="...">
+                    </div>
+                    <div class="col-8">
+                        <div class="card-body">
+                            <h5 class="card-title">Estudiantes</h5>
+                            <p class="card-text"><?php echo $cantidadEstudiantes ?></p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="card mb-3 col" style="max-width: 540px;" id="cursos">
-            <div class="row g-0">
-                <div class="col-md-4">
-                    <img src="/assets/cenefco_grande.png" class="img-fluid rounded-start" alt="...">
-                </div>
-                <div class="col-md-8">
-                    <div class="card-body">
-                        <h5 class="card-title">Cursos</h5>
-                        <p class="card-text"><?php echo $cantidadCursos ?></p>
+        <div class="col-12 col-md-4">
+            <div class="card mb-3" style="max-width: 540px;" id="cursos">
+                <div class="row g-0">
+                    <div class="col-4">
+                        <img src="/assets/cenefco_grande.png" class="img-fluid rounded-start" alt="...">
+                    </div>
+                    <div class="col-8">
+                        <div class="card-body">
+                            <h5 class="card-title">Cursos</h5>
+                            <p class="card-text"><?php echo $cantidadCursos ?></p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="card mb-3 col" style="max-width: 540px;" id="inventario">
-            <div class="row g-0">
-                <div class="col-md-4">
-                    <img src="/assets/cenefco_grande.png" class="img-fluid rounded-start" alt="...">
-                </div>
-                <div class="col-md-8">
-                    <div class="card-body">
-                        <h5 class="card-title">Inventario</h5>
-                        <p class="card-text"><?php echo $cantidadInventario ?></p>
+        <div class="col-12 col-md-4">
+            <div class="card mb-3" style="max-width: 540px;" id="inventario">
+                <div class="row g-0">
+                    <div class="col-4">
+                        <img src="/assets/cenefco_grande.png" class="img-fluid rounded-start" alt="...">
+                    </div>
+                    <div class="col-8">
+                        <div class="card-body">
+                            <h5 class="card-title">Inventario</h5>
+                            <p class="card-text"><?php echo $cantidadInventario ?></p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
     <dialog id="ModalDocentes">
         <div class="d-flex justify-content-between align-items-center position-relative  mb-4" style="z-index: 999;">
             <h5 class="card-title" id="vistaNombre">Reporte Docentes</h5>

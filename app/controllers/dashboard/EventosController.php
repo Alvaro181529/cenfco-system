@@ -71,26 +71,25 @@ class EventosController
                 $error = "Error al subir la imagen.";
                 return;
             }
-
-            if ($certificado) {
-                $resultCertificado = $this->certificadosModel->agregarCertificado($titulo, $certificadoPrecio, $precio, $descripcion);
-            }
-
-            $result = $this->eventosModel->agregarEventos($titulo, $descripcion, $precio, $docente, $image_name, $categoria, $fechaInicio, $fechaFin, $mostrar);
-            if ($resultCertificado == "Nuevo certificado agregado exitosamente") {
-                header("Location: /dashboard/eventos");
-                exit();
-            } else {
-                echo $resultCertificado;
-            }
-            if ($result == "Nuevo curso agregado exitosamente") {
-                header("Location: /dashboard/eventos");
-                exit();
-            } else {
-                $error = $result;
-            }
         } else {
             $error = "Por favor, suba una imagen.";
+        }
+        if ($certificado) {
+            $resultCertificado = $this->certificadosModel->agregarCertificado($titulo, $certificadoPrecio, $precio, $descripcion);
+        }
+
+        $result = $this->eventosModel->agregarEventos($titulo, $descripcion, $precio, $docente, $image_name, $categoria, $fechaInicio, $fechaFin, $mostrar);
+        if ($resultCertificado == "Nuevo certificado agregado exitosamente") {
+            header("Location: /dashboard/eventos");
+            exit();
+        } else {
+            echo $resultCertificado;
+        }
+        if ($result == "Nuevo curso agregado exitosamente") {
+            header("Location: /dashboard/eventos");
+            exit();
+        } else {
+            $error = $result;
         }
     }
 
@@ -164,7 +163,7 @@ class EventosController
     {
         $data = json_decode(file_get_contents('php://input'), true);
         $id = $data['id'] ?? '';
-
+        error_log($id);
         if (empty($id)) {
             http_response_code(400);
             echo json_encode(["error" => "El ID del curso es obligatorio."]);

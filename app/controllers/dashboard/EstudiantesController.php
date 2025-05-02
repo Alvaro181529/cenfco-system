@@ -24,12 +24,14 @@ class EstudiantesController
 
     public function Guardado()
     {
+        $expedido = $_POST['expedido'] ?? '';
         $nombre = $_POST['nombre'] ?? '';
         $apellido = $_POST['apellido'] ?? '';
         $correo = $_POST['correo'] ?? '';
         $carnet = $_POST['carnet'] ?? '';
         $telefono = $_POST['telefono'] ?? '';
         $direccion = $_POST['direccion'] ?? '';
+        $carnetExpedido = $carnet . '-' . $expedido;
 
         $upload_dir = 'storage/uploads/estudiantes/';
         if (empty($nombre) || empty($apellido) || empty($correo)) {
@@ -57,7 +59,7 @@ class EstudiantesController
         } else {
             $error = "Por favor, suba una foto.";
         }
-        $result = $this->estudiantesModel->agregarEstudiante($nombre, $apellido, $correo, $carnet, $telefono, $direccion, $image_name);
+        $result = $this->estudiantesModel->agregarEstudiante($nombre, $apellido, $correo, $carnetExpedido, $telefono, $direccion, $image_name);
 
         if ($result == "Nuevo estudiante agregado exitosamente") {
             header("Location: /dashboard/estudiantes");
@@ -106,12 +108,14 @@ class EstudiantesController
     public function Actualizar()
     {
         $id = $_POST['id'] ?? '';
+        $expedido = $_POST['expedido'] ?? '';
         $nombre = $_POST['nombre'] ?? '';
         $apellido = $_POST['apellido'] ?? '';
         $correo = $_POST['correo'] ?? '';
         $carnet = $_POST['carnet'] ?? '';
         $telefono = $_POST['telefono'] ?? '';
         $direccion = $_POST['direccion'] ?? '';
+        $carnetExpedido = $carnet . '-' . $expedido;
 
         $upload_dir = 'storage/uploads/estudiantes/';
 
@@ -145,7 +149,7 @@ class EstudiantesController
         } else {
             $error = "Por favor, suba una foto.";
         }
-        $result = $this->estudiantesModel->actualizarEstudiante($id, $nombre, $apellido, $correo, $carnet, $telefono, $direccion, $image_name);
+        $result = $this->estudiantesModel->actualizarEstudiante($id, $nombre, $apellido, $correo, $carnetExpedido, $telefono, $direccion, $image_name);
 
         if ($result == "Estudiante actualizado exitosamente") {
             header("Location: /dashboard/estudiantes");

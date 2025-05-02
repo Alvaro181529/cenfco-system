@@ -12,7 +12,7 @@ class DocentesController
     public function docentes()
     {
         if ($_SESSION['user']['role']) {
-        }else{
+        } else {
             header('Location: / ');
             exit();
         }
@@ -20,13 +20,14 @@ class DocentesController
         $pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
         $resultadosPorPagina = isset($_GET['resultadosPorPagina']) ? (int)$_GET['resultadosPorPagina'] : 10;
         $query = isset($_GET['query']) ? $_GET['query'] : ''; // Se obtiene el parámetro 'query' si está presente        
- 
+
         $docentes = $docentesModel->obtenerDocentes($query, $pagina, $resultadosPorPagina);
         return require __DIR__ . '/../../views/dashboard/docentes.php';
     }
 
     public function Guardado()
     {
+        $expedido = $_POST['expedido'] ?? '';
         $nombre = $_POST['nombre'] ?? '';
         $apellido = $_POST['apellido'] ?? '';
         $correo = $_POST['correo'] ?? '';
@@ -36,7 +37,7 @@ class DocentesController
         $universidad = $_POST['universidad'] ?? '';
         $observacion = $_POST['observacion'] ?? '';
         $direccion = $_POST['direccion'] ?? '';
-
+        $carnetExpedido = $carnet . '-' . $expedido;
         $upload_dir = 'storage/uploads/docentes/';
 
         if (empty($nombre) || empty($apellido) || empty($correo)) {
@@ -101,7 +102,7 @@ class DocentesController
             }
         }
 
-        $result = $this->docentesModel->agregarDocente($nombre, $apellido, $correo, $carnet, $telefono, $estadoCivil, $universidad, $observacion, $direccion, $image_name, $firma_name, $pdf_name);
+        $result = $this->docentesModel->agregarDocente($nombre, $apellido, $correo, $carnetExpedido, $telefono, $estadoCivil, $universidad, $observacion, $direccion, $image_name, $firma_name, $pdf_name);
 
         if ($result == "Nuevo docente agregado exitosamente") {
             header("Location: /dashboard/docentes");
@@ -159,6 +160,7 @@ class DocentesController
     public function Actualizar()
     {
         $id = $_POST['id'] ?? '';
+        $expedido = $_POST['expedido'] ?? '';
         $nombre = $_POST['nombre'] ?? '';
         $apellido = $_POST['apellido'] ?? '';
         $correo = $_POST['correo'] ?? '';
@@ -166,8 +168,10 @@ class DocentesController
         $telefono = $_POST['telefono'] ?? '';
         $estadoCivil = $_POST['estadoCivil'] ?? '';
         $universidad = $_POST['universidad'] ?? '';
-        $observacion = $_POST['observacion'] ?? '';
+        $observacion = $_POST['observacion'] ?? 'Sin observación';
         $direccion = $_POST['direccion'] ?? '';
+
+        $carnetExpedido = $carnet . '-' . $expedido;
 
         $upload_dir = 'storage/uploads/docentes/';
 
@@ -237,7 +241,7 @@ class DocentesController
             }
         }
 
-        $result = $this->docentesModel->actualizarDocente($id, $nombre, $apellido, $correo, $carnet, $telefono, $estadoCivil, $universidad, $observacion, $direccion, $image_name ?? null, $firma_name ?? null, $pdf_name ?? null);
+        $result = $this->docentesModel->actualizarDocente($id, $nombre, $apellido, $correo, $carnetExpedido, $telefono, $estadoCivil, $universidad, $observacion, $direccion, $image_name ?? null, $firma_name ?? null, $pdf_name ?? null);
 
         if ($result == "Docente actualizado exitosamente") {
             header("Location: /dashboard/docentes");

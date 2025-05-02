@@ -21,16 +21,16 @@ class VentasController
         $certificadosModel = new CertificadosModel();
         $estudiantesModel = new EstudiantesModel();
 
-        $estudiantes = $estudiantesModel->obtenerEstudiantes();
-        $certificados = $certificadosModel->obtenerCertificados();
+        $estudiantes = $estudiantesModel->obtenerEstudiantes(null, null, null, 1, 1000);
+        $certificados = $certificadosModel->obtenerCertificados(null, 1, 1000);
         $username = $_SESSION['user']['username'];
 
         if ($_SESSION['user']['role'] == "Administrador") {
             $ventas = $this->ventasModel->obtenerVentas('', 'certificado', $anio, $mes);
             $total = $this->ventasModel->obtenerTotalVentas('', 'certificado', $anio, $mes);
         } else {
-            $total = $this->ventasModel->obtenerVentas($username, 'certificado', $anio, $mes);
-            $ventas = $this->ventasModel->obtenerTotalVentas($username, 'certificado', $anio, $mes);
+            $ventas = $this->ventasModel->obtenerVentas($username, 'certificado', $anio, $mes);
+            $total = $this->ventasModel->obtenerTotalVentas($username, 'certificado', $anio, $mes);
         }
         require __DIR__ . '/../../views/dashboard/ventasCertificados.php';
     }
@@ -46,11 +46,11 @@ class VentasController
         $anio = isset($_GET['anio']) ? (int)$_GET['anio'] : date('Y');
         $cursosModel = new CursosModel();
         $estudiantesModel = new EstudiantesModel();
-        $estudiantes = $estudiantesModel->obtenerEstudiantes();
-        $cursos = $cursosModel->obtenerCursos();
+        $estudiantes = $estudiantesModel->obtenerEstudiantes(null, null, null, 1, 1000);
+        $cursos = $cursosModel->obtenerCursos(null, null, null, 1, 1000);
         if ($_SESSION['user']['role'] == "Administrador") {
             $ventas = $this->ventasModel->obtenerVentas('', 'curso', $anio, $mes);
-            $total = $this->ventasModel->obtenerTotalVentas('', 'curso' ,$anio, $mes);
+            $total = $this->ventasModel->obtenerTotalVentas('', 'curso', $anio, $mes);
         } else {
             $ventas = $this->ventasModel->obtenerVentas($username, 'curso', $anio, $mes);
             $total = $this->ventasModel->obtenerTotalVentas($username, 'curso', $anio, $mes);

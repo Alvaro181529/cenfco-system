@@ -7,17 +7,30 @@
         <div class="col">
             <form action="/dashboard/ventas/cursos" method="GET" class="d-flex align-items-center">
                 <select name="mes" class="form-select me-2" id="mes">
-                    <?php
+                <?php
                     // Obtener el mes actual
                     $currentMonth = date("m");
-
+                    $meses = [
+                        1 => 'Enero',
+                        2 => 'Febrero',
+                        3 => 'Marzo',
+                        4 => 'Abril',
+                        5 => 'Mayo',
+                        6 => 'Junio',
+                        7 => 'Julio',
+                        8 => 'Agosto',
+                        9 => 'Septiembre',
+                        10 => 'Octubre',
+                        11 => 'Noviembre',
+                        12 => 'Diciembre'
+                    ];
                     // Iterar sobre los meses del año
                     for ($i = 1; $i <= 12; $i++) {
                         // Obtener el nombre del mes
                         $monthName = date("F", mktime(0, 0, 0, $i, 1));
                         // Verificar si el mes está seleccionado
                         $selected = (isset($_GET['mes']) && $_GET['mes'] == $i) || (!isset($_GET['mes']) && $i == $currentMonth) ? 'selected' : '';
-                        echo "<option value=\"$i\" $selected>" . ucfirst($monthName) . "</option>";
+                        echo "<option value=\"$i\" $selected>{$meses[$i]}</option>";
                     }
                     ?>
                 </select>
@@ -39,7 +52,7 @@
                 </select>
                 <div class="col-auto">
                     <button class="btn btn-primary" type="submit">Buscar</button>
-                    <button type="button" id="ventaCertificado">Reporte</button>
+                    <button type="button" class="btn btn-danger" id="ventaCertificado">Reporte</button>
 
                 </div>
             </form>
@@ -118,7 +131,7 @@
 </main>
 <dialog id="ModalVentaCertificados">
     <div class="d-flex justify-content-between align-items-center position-relative  mb-4" style="z-index: 999;">
-        <h5 class="card-title" id="vistaNombre">Reporte ventas</h5>
+        <h5 class="card-title" id="vistaNombre">Reporte ventas curso</h5>
         <form action="" method="dialog">
             <button type="submit" class="btn-close" id="closeVentaCertificados" aria-label="Close"></button>
         </form>
@@ -128,7 +141,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="tipo">Tipo</label>
-                    <select disabled id="tipo" name="tipo" class="form-select">
+                    <select disabled id="tipo" name="tipo" class="form-select" >
                         <option value="curso" selected <?php echo ($_GET['tipo'] == 'curso') ? 'selected' : ''; ?>>Curso</option>
                     </select>
 
@@ -148,7 +161,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="fechaInicio">Fecha de inicio</label>
-                    <input type="date" id="fechaInicio" name="fechaInicio" class="form-control"
+                    <input type="date" id="fechaInicio" name="fechaInicio" class="form-control" required
                         value="<?php echo htmlspecialchars($_GET['fechaInicio'] ?? ''); ?>">
                 </div>
             </div>
@@ -156,7 +169,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="fechaFin">Fecha de fin</label>
-                    <input type="date" id="fechaFin" name="fechaFin" class="form-control"
+                    <input type="date" id="fechaFin" name="fechaFin" class="form-control" required
                         value="<?php echo htmlspecialchars($_GET['fechaFin'] ?? ''); ?>">
                 </div>
             </div>
@@ -179,7 +192,7 @@
         <div class="row">
             <div class="mb-3">
                 <label for="curso" class="form-label">Curso</label>
-                <input type="text" list="listCursos" class="form-control" id="curso" name="curso" placeholder="Título">
+                <input type="text" list="listCursos" class="form-select" maxlength="100" id="curso" name="curso" placeholder="Título">
                 <datalist id="listCursos">
                     <?php foreach ($cursos['cursos'] as $curso): ?>
                         <option value="<?php echo $curso['titulo']; ?>" data-id="<?php echo $curso['id']; ?>" data-price="<?php echo $curso['precio']; ?>"></option>
@@ -189,7 +202,7 @@
 
             <div class=" mb-3 col">
                 <label for="estudiante" class="form-label">Estudiante</label>
-                <input type="text" list="listEstudiante" class="form-control" id="estudiante" name="estudiante" placeholder="Nombre">
+                <input type="text" list="listEstudiante" class="form-select" id="estudiante" name="estudiante" placeholder="Nombre">
                 <datalist id="listEstudiante">
                     <?php foreach ($estudiantes['estudiantes'] as $estudiante): ?>
                         <option value="<?php echo $estudiante['nombres'] . ' ' . $estudiante['apellidos']; ?>" data-es="<?php echo $estudiante['id']; ?>" data-ci="<?php echo $estudiante['carnet']; ?>"><?php echo $estudiante['nombres'] . ' ' . $estudiante['apellidos']; ?></option>
@@ -208,7 +221,7 @@
             </div>
             <div class="mb-3">
                 <label for="imagen" class="form-label">Comprobante</label>
-                <input type="file" class="form-control" id="imagen" name="imagen" accept="image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+                <input type="file" class="form-control" id="imagen" name="imagen" accept="image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" required>
             </div>
 
             <div class="mb-3">
@@ -307,7 +320,7 @@
         const user = $('#user').value; // Valor del select "Usuario"
 
         // Asignamos la acción para PDF
-        const url = '/dashboard/reportes/ventas-pdf'; // Ruta para el reporte de PDF
+        const url = `/dashboard/reportes/ventas-pdf`; // Ruta para el reporte de PDF
         const form = $('#reportVentasCertificado');
 
         // Cambiar el método del formulario a POST

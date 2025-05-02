@@ -161,56 +161,46 @@ class ReportesModel
     public function ventasReportes($fechaInicio, $fechaFin, $tipo = null, $user = null)
     {
         $query = "SELECT * FROM ventas WHERE 1=1";
-
-        if ($user) {
-            $query .= " AND user LIKE ?";
-        }
-        if ($tipo) {
-            $query .= " AND tipo LIKE ?";
-        }
-
-        if ($fechaInicio && $fechaFin) {
-            $query .= " AND createt_at BETWEEN ? AND ?";
-        }
-
-        // Preparar la consulta
-        $stmt = $this->db->prepare($query);
-
         $params = [];
         $types = '';
 
-        // Agregar parámetros para las fechas
+        // Orden: primero user
+        if ($user) {
+            $query .= " AND user LIKE ?";
+            $params[] = "%" . $user . "%";
+            $types .= 's';
+        }
+
+        // Luego tipo
+        if ($tipo) {
+            $query .= " AND tipo LIKE ?";
+            $params[] = "%" . $tipo . "%";
+            $types .= 's';
+        }
+
+        // Luego fechas
         if ($fechaInicio && $fechaFin) {
+            $query .= " AND created_at BETWEEN ? AND ?";
             $params[] = $fechaInicio;
             $params[] = $fechaFin;
-            $types .= 'ss'; // Asumiendo que las fechas están en formato 'Y-m-d'
+            $types .= 'ss';
         }
 
-        // Agregar parámetros para tipo (LIKE)
-        if ($tipo) {
-            $params[] = "%" . $tipo . "%"; // Los signos '%' deben ir aquí
-            $types .= 's';
-        }
-
-        // Agregar parámetros para usuario (LIKE)
-        if ($user) {
-            $params[] = "%" . $user . "%"; // Los signos '%' deben ir aquí
-            $types .= 's';
-        }
+        $stmt = $this->db->prepare($query);
 
         if ($params) {
-            // Vincular los parámetros con bind_param
             $stmt->bind_param($types, ...$params);
         }
 
         if ($stmt->execute()) {
-            // Obtener los resultados
             $result = $stmt->get_result();
-            $certificados = [];
+            $ventas = [];
+
             while ($row = $result->fetch_assoc()) {
-                $certificados[] = $row;
+                $ventas[] = $row;
             }
-            return $certificados;
+
+            return $ventas;
         } else {
             return "Error: " . $this->db->error;
         }

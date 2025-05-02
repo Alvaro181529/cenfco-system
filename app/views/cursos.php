@@ -356,89 +356,92 @@
 
             <!-- Sidebar Filters - Only visible on large screens -->
             <div class="col-lg-3 mb-4 d-none d-lg-block">
-                <div class="filter-section">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="filter-title mb-0">Filtros</h5>
-                        <a href="#" class="filter-reset">Restablecer</a>
+                <form action="">
+                    <div class="filter-section">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="filter-title mb-0">Filtros</h5>
+                            <a href="#" class="filter-reset">Restablecer</a>
+                        </div>
+
+                        <div class="mb-3">
+
+                            <h6 class="mb-2">Categorías</h6>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="category1">
+                                <label class="form-check-label" for="category1">
+                                    Ciencias Humanas
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="category2">
+                                <label class="form-check-label" for="category2">
+                                    Arquitectura
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="category3">
+                                <label class="form-check-label" for="category3">
+                                    Derecho
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="category4">
+                                <label class="form-check-label" for="category4">
+                                    Tecnología
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="category5">
+                                <label class="form-check-label" for="category5">
+                                    Ciencias Empresariales
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="category6">
+                                <label class="form-check-label" for="category6">
+                                    Medicina
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="category7">
+                                <label class="form-check-label" for="category7">
+                                    Idiomas
+                                </label>
+                            </div>
+                        </div>
+
+
+                        <hr class="filter-divider">
+
+                        <div class="mb-3">
+                            <h6 class="mb-2">Precio</h6>
+                            <!-- <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="price1">
+                                <label class="form-check-label" for="price1">
+                                    Gratis
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="price2">
+                                <label class="form-check-label" for="price2">
+                                    De pago
+                                </label>
+                            </div> -->
+                            <div class="price-range">
+                                <label for="priceRange" class="form-label d-flex justify-content-between">
+                                    <span>Rango de precio:</span>
+                                    <span>$0 - $200</span>
+                                </label>
+                                <input type="range" class="form-range range-slider" min="0" max="200" step="10" id="priceRange">
+                            </div>
+                        </div>
+
+
+                        <div class="d-grid mt-4">
+                            <button class="btn btn-custom">Aplicar Filtros</button>
+                        </div>
                     </div>
-
-                    <div class="mb-3">
-                        <h6 class="mb-2">Categorías</h6>
-                        <div class="form-check mb-2">
-                            <input class="form-check-input" type="checkbox" id="category1">
-                            <label class="form-check-label" for="category1">
-                                Ciencias Humanas
-                            </label>
-                        </div>
-                        <div class="form-check mb-2">
-                            <input class="form-check-input" type="checkbox" id="category2">
-                            <label class="form-check-label" for="category2">
-                                Arquitectura
-                            </label>
-                        </div>
-                        <div class="form-check mb-2">
-                            <input class="form-check-input" type="checkbox" id="category3">
-                            <label class="form-check-label" for="category3">
-                                Derecho
-                            </label>
-                        </div>
-                        <div class="form-check mb-2">
-                            <input class="form-check-input" type="checkbox" id="category4">
-                            <label class="form-check-label" for="category4">
-                                Tecnología
-                            </label>
-                        </div>
-                        <div class="form-check mb-2">
-                            <input class="form-check-input" type="checkbox" id="category5">
-                            <label class="form-check-label" for="category5">
-                                Ciencias Empresariales
-                            </label>
-                        </div>
-                        <div class="form-check mb-2">
-                            <input class="form-check-input" type="checkbox" id="category6">
-                            <label class="form-check-label" for="category6">
-                                Medicina
-                            </label>
-                        </div>
-                        <div class="form-check mb-2">
-                            <input class="form-check-input" type="checkbox" id="category7">
-                            <label class="form-check-label" for="category7">
-                                Idiomas
-                            </label>
-                        </div>
-                    </div>
-
-
-                    <hr class="filter-divider">
-
-                    <div class="mb-3">
-                        <h6 class="mb-2">Precio</h6>
-                        <div class="form-check mb-2">
-                            <input class="form-check-input" type="checkbox" id="price1">
-                            <label class="form-check-label" for="price1">
-                                Gratis
-                            </label>
-                        </div>
-                        <div class="form-check mb-2">
-                            <input class="form-check-input" type="checkbox" id="price2">
-                            <label class="form-check-label" for="price2">
-                                De pago
-                            </label>
-                        </div>
-                        <div class="price-range">
-                            <label for="priceRange" class="form-label d-flex justify-content-between">
-                                <span>Rango de precio:</span>
-                                <span>$0 - $200</span>
-                            </label>
-                            <input type="range" class="form-range range-slider" min="0" max="200" step="10" id="priceRange">
-                        </div>
-                    </div>
-
-
-                    <div class="d-grid mt-4">
-                        <button class="btn btn-custom">Aplicar Filtros</button>
-                    </div>
-                </div>
+                </form>
             </div>
 
             <!-- Course Listings -->
@@ -482,7 +485,7 @@
                         <div class="col-md-6 col-lg-4">
                             <div class="card course-card">
                                 <div class="position-relative">
-                                    <img src="/storage/uploads/cursos/<?php echo $curso['imagen'] ?>" class="card-img-top course-image" alt="Diseño Web Profesional">
+                                    <img src="<?php echo (!empty($curso['imagen']) ? '/storage/uploads/cursos/' . $curso['imagen'] : 'assets/img/placeholder.svg') ?>" class="card-img-top course-image" alt="Diseño Web Profesional">
                                     <span class="badge course-category badge-tecnologia"><?php echo $curso['categoria'] ?></span>
                                 </div>
                                 <div class="card-body">
@@ -746,7 +749,7 @@
 
                 <div class="mb-4">
                     <h6 class="mb-3 fw-bold">Precio</h6>
-                    <div class="form-check mb-2">
+                    <!-- <div class="form-check mb-2">
                         <input class="form-check-input" type="checkbox" id="mPrice1">
                         <label class="form-check-label" for="mPrice1">
                             Gratis
@@ -757,7 +760,7 @@
                         <label class="form-check-label" for="mPrice2">
                             De pago
                         </label>
-                    </div>
+                    </div> -->
                     <div class="price-range mt-3">
                         <label for="mPriceRange" class="form-label d-flex justify-content-between">
                             <span>Rango de precio:</span>
@@ -821,5 +824,6 @@
         $('#dialog-form').showModal()
     })
 </script>
+<?php require 'component/whats.php' ?>
 <?php require 'component/chat.php' ?>
 <?php require 'template/foot.php' ?>

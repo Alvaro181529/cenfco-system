@@ -10,7 +10,9 @@
     <!-- Font Awesome para iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-    <style>
+    <meta name="robots" content="noindex, nofollow">
+
+   <style>
         :root {
             --primary-color: #0a0a4a;
             --secondary-color: #f8f9fa;

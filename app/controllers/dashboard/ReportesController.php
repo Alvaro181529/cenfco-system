@@ -256,16 +256,23 @@ class ReportesController
 
         $ventasModel = new VentasModel();
 
-        if (empty($fechaFin) && empty($fechaInicio) && empty($tipo) && empty($user)) {
-            $total = $ventasModel->obtenerTotalVentas($user, $tipo);
-            $reportes = $this->reportesModel->obtenerReportesVenta();
-        } else {
-            $total = $ventasModel->obtenerTotalVentas($user, $tipo);
-            $reportes = $this->reportesModel->ventasReportes($fechaInicio, $fechaFin, $tipo, $user);
-        }
+        error_log($user);
+        error_log($tipo);
+        error_log($fechaFin);
+        error_log($fechaInicio);
+        $total = $ventasModel->obtenerTotalVentas($user, $tipo);
+        $reportes = $this->reportesModel->ventasReportes($fechaInicio, $fechaFin, $tipo, $user);
+
+        // if (empty($fechaFin) && empty($fechaInicio) && empty($tipo) && empty($user)) {
+        //     $total = $ventasModel->obtenerTotalVentas($user, $tipo);
+        //     $reportes = $this->reportesModel->obtenerReportesVenta();
+        // } else {
+        //     $total = $ventasModel->obtenerTotalVentas($user, $tipo);
+        //     $reportes = $this->reportesModel->ventasReportes($fechaInicio, $fechaFin, $tipo, $user);
+        // }
 
         if (empty($reportes)) {
-            echo "No se encontraron reportes para las fechas seleccionadas.";
+            $error = "No se encontraron reportes para las fechas seleccionadas.";
             exit;
         }
 
